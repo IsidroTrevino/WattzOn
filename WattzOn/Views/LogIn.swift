@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LogIn: View {
-    @StateObject private var LogIn = UsuarioLogIn()
+    @Environment(\.modelContext) private var context
+    @State private var logInVM: UsuarioLogIn?
     @State private var email = ""
     @State private var password = ""
     @State private var showPassword = false
@@ -115,14 +117,26 @@ struct LogIn: View {
             }
             .navigationTitle("")
             .navigationBarHidden(true)
+            .task {
+                logInVM = UsuarioLogIn(context: context)
+            }
         }
     }
 
     private func login() async {
+        guard let logInVM = logInVM else { return }
+
         do {
-            try await LogIn.login(email: email, password: password)
+            try await logInVM.login(email: email, password: password)
             showErrorMessage = false
             isLoggedIn = true
+            
+            if let usuario = logInVM.usuario {
+                context.insert(usuario)
+                try context.save()
+                print("Usuario guardado en SwiftData.")
+            }
+
         } catch {
             showErrorMessage = true
             errorMessage = "Correo o contraseña incorrectos."

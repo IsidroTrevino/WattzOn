@@ -8,10 +8,10 @@
 import Foundation
 
 class PerfilViewModel: ObservableObject {
-    @Published var usuario: Usuario
+    @Published var userr: Usuario
     
     init() {
-        usuario = Usuario(
+        userr = Usuario(
             usuarioId: 1,
             nombre: "Emilia Yeray",
             apellido: "Treviño Medina",

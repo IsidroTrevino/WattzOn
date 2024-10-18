@@ -12,9 +12,9 @@ import SwiftData
 class UsuarioLogIn: ObservableObject {
     @Published var usuario: Usuario?
     
-    var context: ModelContext?
+    var context: ModelContext
 
-    init(context: ModelContext? = nil) {
+    init(context: ModelContext) {
         self.context = context
     }
     
@@ -46,6 +46,7 @@ class UsuarioLogIn: ObservableObject {
             let usuario = try JSONDecoder().decode(Usuario.self, from: data)
             self.usuario = usuario
             
+            // Guardar el usuario en SwiftData
             try saveUsuarioToSwiftData(usuario: usuario)
             
         } catch {
@@ -55,20 +56,7 @@ class UsuarioLogIn: ObservableObject {
     }
     
     private func saveUsuarioToSwiftData(usuario: Usuario) throws {
-        guard let context = context else {
-            print("No SwiftData context available")
-            return
-        }
-        
-        let usuario = Usuario(
-            usuarioId: usuario.usuarioId,
-            nombre: usuario.nombre,
-            apellido: usuario.apellido,
-            email: usuario.email,
-            ciudad: usuario.ciudad,
-            estado: usuario.estado
-        )
-        
+        // Asegúrate de usar el contexto
         context.insert(usuario)
         
         try context.save()
@@ -76,13 +64,14 @@ class UsuarioLogIn: ObservableObject {
     }
 }
 
+
 @MainActor
 class UsuarioRegister: ObservableObject {
     @Published var usuario: Usuario?
     
-    var context: ModelContext?
+    var context: ModelContext
 
-    init(context: ModelContext? = nil) {
+    init(context: ModelContext) {
         self.context = context
     }
     
@@ -126,20 +115,6 @@ class UsuarioRegister: ObservableObject {
     }
     
     private func saveUsuarioToSwiftData(usuario: Usuario) throws {
-        guard let context = context else {
-            print("No SwiftData context available")
-            return
-        }
-        
-        let usuario = Usuario(
-            usuarioId: usuario.usuarioId,
-            nombre: usuario.nombre,
-            apellido: usuario.apellido,
-            email: usuario.email,
-            ciudad: usuario.ciudad,
-            estado: usuario.estado
-        )
-        
         context.insert(usuario)
         
         try context.save()

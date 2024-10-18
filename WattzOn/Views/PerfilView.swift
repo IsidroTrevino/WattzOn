@@ -47,7 +47,7 @@ struct PerfilView: View {
                     Text("Nombre")
                         .font(.headline)
                         .foregroundColor(.gray)
-                    Text(viewModel.usuario.nombre)
+                    Text(viewModel.userr.nombre)
                         .font(.body)
                         .foregroundColor(.black)
                 }
@@ -65,7 +65,7 @@ struct PerfilView: View {
                     Text("Correo Electrónico")
                         .font(.headline)
                         .foregroundColor(.gray)
-                    Text(viewModel.usuario.email)
+                    Text(viewModel.userr.email)
                         .font(.body)
                         .foregroundColor(.black)
                 }

@@ -6,9 +6,20 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SignIn: View {
-    @StateObject private var register = UsuarioRegister()
+    @Environment(\.modelContext) private var context
+    @StateObject private var registerVM: UsuarioRegister = {
+        do {
+
+            let container = try ModelContainer(for: Usuario.self)
+            return UsuarioRegister(context: container.mainContext)
+        } catch {
+            fatalError("Error al crear el ModelContainer: \(error)")
+        }
+    }()
+
     @State private var email = ""
     @State private var password = ""
     @State private var name = ""
@@ -175,6 +186,9 @@ struct SignIn: View {
                 }
                 .navigationTitle("")
                 .navigationBarHidden(true)
+                .task {
+                    registerVM.context = context
+                }
             }
         }
     }
@@ -193,7 +207,7 @@ struct SignIn: View {
         }
 
         do {
-            try await register.register(nombre: name, apellido: apellido, email: email, password: password, ciudad: ciudad, estado: estado)
+            try await registerVM.register(nombre: name, apellido: apellido, email: email, password: password, ciudad: ciudad, estado: estado)
             showErrorMessage = false
             isRegistered = true
         } catch {
