@@ -27,6 +27,10 @@ struct WattzonApp: App {
                             DomesticoView()
                         case .recibosListView:
                             RecibosView()
+                        case .tipView:
+                            TipView()
+                        case .tipDetailView:
+                            TipDetailView()
                         }
                     }
             }

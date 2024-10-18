@@ -13,6 +13,8 @@ class Router: ObservableObject {
     enum Destination: Hashable {
         case domesticoView
         case recibosListView
+        case tipView        // Añadido para TipView
+        case tipDetailView  // Añadido para TipDetailView
     }
 
     func navigate(to destination: Destination) {

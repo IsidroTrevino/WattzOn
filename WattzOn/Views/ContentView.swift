@@ -14,7 +14,7 @@ struct ContentView: View {
     @EnvironmentObject var router: Router
     
     var body: some View {
-        if isLoggedIn || usuarios.first != nil {
+        if true || usuarios.first != nil {
             TabView {
                 HomeView()
                     .tabItem {
@@ -26,7 +26,7 @@ struct ContentView: View {
                     }
                 TipView()
                     .tabItem {
-                        Label("Tips", systemImage: "plightbulb.led.fill")
+                        Label("Tips", systemImage: "lightbulb.led.fill")
                     }
                 PerfilView()
                     .tabItem {
@@ -41,4 +41,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(Router())
 }
