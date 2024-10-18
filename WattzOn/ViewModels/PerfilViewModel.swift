@@ -11,7 +11,14 @@ class PerfilViewModel: ObservableObject {
     @Published var usuario: Usuario
     
     init() {
-        usuario = Usuario(nombre: "Emilia Yeray Treviño Medina", correo: "EmiliaYeri@hotmail.com", imagenPerfil: "Miguel")
+        usuario = Usuario(
+            usuarioId: 1,
+            nombre: "Emilia Yeray",
+            apellido: "Treviño Medina",
+            email: "EmiliaYeri@hotmail.com",
+            ciudad: "Monterrey",
+            estado: "Nuevo León"
+        )
     }
     
     func cambiarContrasena() {

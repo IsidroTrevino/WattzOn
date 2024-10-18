@@ -20,7 +20,7 @@ struct PerfilView: View {
                     .bold()
                     .padding(.top, 40)
                 
-                Image(viewModel.usuario.imagenPerfil)
+                Image("Miguel")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 120, height: 120)
@@ -65,7 +65,7 @@ struct PerfilView: View {
                     Text("Correo Electrónico")
                         .font(.headline)
                         .foregroundColor(.gray)
-                    Text(viewModel.usuario.correo)
+                    Text(viewModel.usuario.email)
                         .font(.body)
                         .foregroundColor(.black)
                 }
