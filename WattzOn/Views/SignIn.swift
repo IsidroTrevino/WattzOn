@@ -12,14 +12,13 @@ struct SignIn: View {
     @Environment(\.modelContext) private var context
     @StateObject private var registerVM: UsuarioRegister = {
         do {
-
             let container = try ModelContainer(for: Usuario.self)
             return UsuarioRegister(context: container.mainContext)
         } catch {
             fatalError("Error al crear el ModelContainer: \(error)")
         }
     }()
-
+    
     @State private var email = ""
     @State private var password = ""
     @State private var name = ""
@@ -30,8 +29,8 @@ struct SignIn: View {
     @State private var showPassword = false
     @State private var showErrorMessage = false
     @State private var errorMessage = ""
-    @State private var isRegistered = false
-    
+    @Binding var isLoggedIn: Bool // Para cambiar a la TabView cuando el registro sea exitoso
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -172,7 +171,7 @@ struct SignIn: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                             
-                            NavigationLink(destination: LogIn()) {
+                            NavigationLink(destination: LogIn(isLoggedIn: $isLoggedIn)) {
                                 Text("Ingresa aquí.")
                                     .font(.subheadline)
                                     .fontWeight(.bold)
@@ -209,7 +208,7 @@ struct SignIn: View {
         do {
             try await registerVM.register(nombre: name, apellido: apellido, email: email, password: password, ciudad: ciudad, estado: estado)
             showErrorMessage = false
-            isRegistered = true
+            isLoggedIn = true
         } catch {
             showErrorMessage = true
             errorMessage = "Hubo un error en el registro."
@@ -218,5 +217,5 @@ struct SignIn: View {
 }
 
 #Preview {
-    SignIn()
+    SignIn(isLoggedIn: .constant(false))
 }

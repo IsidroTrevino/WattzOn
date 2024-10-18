@@ -16,7 +16,7 @@ struct LogIn: View {
     @State private var showPassword = false
     @State private var showErrorMessage = false
     @State private var errorMessage = ""
-    @State private var isLoggedIn = false
+    @Binding var isLoggedIn: Bool // Recibe un binding para el estado de login
 
     var body: some View {
         NavigationStack {
@@ -75,14 +75,6 @@ struct LogIn: View {
                     .shadow(radius: 5, x: 0, y: 2)
 
                     Button(action: {
-                    }) {
-                        Text("¿Olvidaste tu contraseña?")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .padding(.top, 10)
-                    }
-
-                    Button(action: {
                         Task {
                             await login()
                         }
@@ -103,7 +95,7 @@ struct LogIn: View {
                             .font(.subheadline)
                             .foregroundColor(.gray)
                         
-                        NavigationLink(destination: SignIn()) {
+                        NavigationLink(destination: SignIn(isLoggedIn: $isLoggedIn)) {
                             Text("Registrate aquí.")
                                 .font(.subheadline)
                                 .fontWeight(.bold)
@@ -145,5 +137,5 @@ struct LogIn: View {
 }
 
 #Preview {
-    LogIn()
+    LogIn(isLoggedIn: .constant(false))
 }

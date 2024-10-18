@@ -6,10 +6,28 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Query private var usuarios: [Usuario]
+    @State private var isLoggedIn = false
+    
     var body: some View {
-        LogIn()
+        if isLoggedIn || usuarios.first != nil {
+            TabView {
+                HomeView()
+                    .tabItem {
+                        Label("Home", systemImage: "house")
+                    }
+                
+                PerfilView()
+                    .tabItem {
+                        Label("Perfil", systemImage: "person")
+                    }
+            }
+        } else {
+            LogIn(isLoggedIn: $isLoggedIn)
+        }
     }
 }
 
