@@ -11,6 +11,7 @@ import SwiftData
 struct ContentView: View {
     @Query private var usuarios: [Usuario]
     @State private var isLoggedIn = false
+    @EnvironmentObject var router: Router
     
     var body: some View {
         if isLoggedIn || usuarios.first != nil {
@@ -19,7 +20,10 @@ struct ContentView: View {
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
-                
+                AgregarView()
+                    .tabItem {
+                        Label("Agregar", systemImage: "plus.circle.fill")
+                    }
                 PerfilView()
                     .tabItem {
                         Label("Perfil", systemImage: "person")

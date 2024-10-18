@@ -6,6 +6,38 @@
 //
 
 import SwiftUI
+import SwiftData
+
+@main
+struct WattzonApp: App {
+    @StateObject private var router = Router()
+    
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([Electrodomestico.self, Recibo.self])
+        return try! ModelContainer(for: schema)
+    }()
+
+    var body: some Scene {
+        WindowGroup {
+            NavigationStack(path: $router.navPath) {
+                ContentView()
+                    .navigationDestination(for: Router.Destination.self) { destination in
+                        switch destination {
+                        case .domesticoView:
+                            DomesticoView()
+                        case .recibosListView:
+                            RecibosView()
+                        }
+                    }
+            }
+            .environmentObject(router)
+            .modelContainer(sharedModelContainer)
+        }
+    }
+}
+
+/*
+import SwiftUI
 
 @main
 struct WattzOnApp: App {
@@ -15,3 +47,4 @@ struct WattzOnApp: App {
         }
     }
 }
+*/
