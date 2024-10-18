@@ -24,6 +24,10 @@ struct ContentView: View {
                     .tabItem {
                         Label("Agregar", systemImage: "plus.circle.fill")
                     }
+                TipView()
+                    .tabItem {
+                        Label("Tips", systemImage: "plightbulb.led.fill")
+                    }
                 PerfilView()
                     .tabItem {
                         Label("Perfil", systemImage: "person")
