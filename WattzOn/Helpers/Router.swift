@@ -11,10 +11,13 @@ class Router: ObservableObject {
     @Published var navPath: [Destination] = []
 
     enum Destination: Hashable {
+        case logIn
+        case signIn
         case domesticoView
         case recibosListView
-        case tipView        // Añadido para TipView
-        case tipDetailView  // Añadido para TipDetailView
+        case tipView
+        case tipDetailView
+        case homeView
     }
 
     func navigate(to destination: Destination) {

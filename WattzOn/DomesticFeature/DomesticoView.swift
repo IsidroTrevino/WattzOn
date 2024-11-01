@@ -9,6 +9,7 @@ import SwiftUI
 import Vision
 import CoreML
 import SwiftData
+import AVFoundation // Importante para manejar permisos de la cámara
 
 struct DomesticoView: View {
     @EnvironmentObject var router: Router
@@ -104,8 +105,7 @@ struct DomesticoView: View {
                 title: Text("Agregar Electrodoméstico"),
                 buttons: [
                     .default(Text("Escanear con Cámara")) {
-                        showImagePicker = true
-                        imagePickerSourceType = .camera
+                        handleCameraAccess()
                     },
                     .default(Text("Subir Foto de la Galería")) {
                         showImagePicker = true
@@ -131,17 +131,22 @@ struct DomesticoView: View {
         }
         .onChange(of: selectedImage) { image in
             if let image = image {
-                // Guardar la imagen y obtener su ruta
-                let imagePath = saveImageToDocuments(image: image)
-                // Usar pd_id fijo
-                let pd_id = "3417972"
-                // Llamar a la API con el pd_id fijo y la ruta de la imagen
-                fetchDataWithPdId(pd_id, imagePath: imagePath)
+                processImage(image)
             }
         }
         .alert(isPresented: $showErrorAlert) {
             Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
         }
+        .overlay(
+            Group {
+                if isProcessingImage {
+                    ProgressView("Procesando imagen...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .background(Color.black.opacity(0.5))
+                        .ignoresSafeArea()
+                }
+            }
+        )
     }
 
     private func deleteElectrodomestico(at offsets: IndexSet) {
@@ -161,11 +166,59 @@ struct DomesticoView: View {
         }
     }
 
-    // MARK: - Funciones Auxiliares
+    // MARK: - Manejo de permisos y disponibilidad de la cámara
 
-    func fetchDataWithPdId(_ pd_id: String, imagePath: String?) {
+    func handleCameraAccess() {
+        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        switch cameraAuthorizationStatus {
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        self.presentCamera()
+                    } else {
+                        self.errorMessage = "El acceso a la cámara ha sido denegado."
+                        self.showErrorAlert = true
+                    }
+                }
+            }
+        case .authorized:
+            presentCamera()
+        case .restricted, .denied:
+            errorMessage = "El acceso a la cámara está restringido o denegado."
+            showErrorAlert = true
+        @unknown default:
+            errorMessage = "Error desconocido al acceder a la cámara."
+            showErrorAlert = true
+        }
+    }
+
+    func presentCamera() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            showImagePicker = true
+            imagePickerSourceType = .camera
+        } else {
+            errorMessage = "La cámara no está disponible en este dispositivo."
+            showErrorAlert = true
+        }
+    }
+
+    // MARK: - Procesamiento de imagen y ML
+
+    func processImage(_ image: UIImage) {
         isProcessingImage = true
 
+        // Simular procesamiento y usar pd_id fijo
+        let pd_id = "2298666"
+
+        // Guardar la imagen y obtener su ruta
+        let imagePath = saveImageToDocuments(image: image)
+
+        // Llamar a la API con el pd_id fijo y la ruta de la imagen
+        fetchDataWithPdId(pd_id, imagePath: imagePath)
+    }
+
+    func fetchDataWithPdId(_ pd_id: String, imagePath: String?) {
         fetchEnergyStarData(pd_id: pd_id) { products in
             DispatchQueue.main.async {
                 self.isProcessingImage = false
@@ -224,5 +277,5 @@ struct DomesticoView: View {
 #Preview {
     DomesticoView()
         .environmentObject(Router())
-        .modelContainer(for: Electrodomestico.self)
+        .modelContainer(for: [Electrodomestico.self])
 }
