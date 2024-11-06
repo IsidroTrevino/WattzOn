@@ -30,6 +30,7 @@ struct ContentView: View {
                     Label("Perfil", systemImage: "person")
                 }
         }
+        .navigationBarBackButtonHidden()
     }
 }
 

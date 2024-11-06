@@ -1,69 +1,53 @@
 import Foundation
-import SwiftData
 
-let ipAddress = "10.22.217.194"
+let ipAddress = "10.22.135.186:3000"
 
 @MainActor
 class UsuarioLogIn: ObservableObject {
     @Published var usuario: Usuario?
-    var context: ModelContext
-
-    init(context: ModelContext) {
-        self.context = context
-    }
 
     func login(email: String, password: String) async throws {
-        guard let url = URL(string: "http://\(ipAddress)/api/wattzon/usuario/login") else {
+        // Construir la URL con parámetros de consulta para email y password
+        guard let url = URL(string: "http://\(ipAddress)/api/wattzon/usuario/login?email=\(email)&password=\(password)") else {
             print("URL inválida")
             return
         }
 
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let requestBody: [String: Any] = [
-            "email": email,
-            "password": password
-        ]
+        urlRequest.httpMethod = "GET"  // Cambiar el método a GET
 
         do {
-            urlRequest.httpBody = try JSONSerialization.data(withJSONObject: requestBody, options: [])
-
+            // Realizar la solicitud
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
 
+            // Imprimir el código de estado de la respuesta para verificación
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Código de estado HTTP:", httpResponse.statusCode)
+            }
+
+            // Verificar que el código de estado sea 200 OK
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Error: Respuesta del servidor no fue 200 OK")
                 throw URLError(.badServerResponse)
             }
 
-            // Decodificar directamente a Usuario
+            // Imprimir los datos de respuesta para depuración
+            print("Datos de respuesta:", String(data: data, encoding: .utf8) ?? "Respuesta vacía")
+
+            // Decodificar la respuesta en el modelo Usuario
             let usuario = try JSONDecoder().decode(Usuario.self, from: data)
             self.usuario = usuario
-
-            // Guardar el usuario en SwiftData
-            try saveUsuarioToSwiftData(usuario: usuario)
 
         } catch {
             print("Error al obtener datos del usuario: \(error)")
             throw error
         }
     }
-
-    private func saveUsuarioToSwiftData(usuario: Usuario) throws {
-        context.insert(usuario)
-        try context.save()
-        print("Usuario guardado en SwiftData.")
-    }
 }
 
 @MainActor
 class UsuarioRegister: ObservableObject {
     @Published var usuario: Usuario?
-    var context: ModelContext
-
-    init(context: ModelContext) {
-        self.context = context
-    }
 
     func register(nombre: String, apellido: String, email: String, password: String, ciudad: String?, estado: String?) async throws {
         guard let url = URL(string: "http://\(ipAddress)/api/wattzon/usuario/register") else {
@@ -86,28 +70,25 @@ class UsuarioRegister: ObservableObject {
 
         do {
             urlRequest.httpBody = try JSONSerialization.data(withJSONObject: requestBody, options: [])
+            print("Cuerpo de la solicitud:", String(data: urlRequest.httpBody ?? Data(), encoding: .utf8) ?? "Cuerpo vacío")
 
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
 
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Código de estado HTTP:", httpResponse.statusCode)
+            }
+
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Error: Respuesta del servidor no fue 200 OK")
                 throw URLError(.badServerResponse)
             }
 
-            // Decodificar directamente a Usuario
             let usuario = try JSONDecoder().decode(Usuario.self, from: data)
             self.usuario = usuario
-
-            try saveUsuarioToSwiftData(usuario: usuario)
 
         } catch {
             print("Error al registrar usuario: \(error)")
             throw error
         }
-    }
-
-    private func saveUsuarioToSwiftData(usuario: Usuario) throws {
-        context.insert(usuario)
-        try context.save()
-        print("Usuario guardado en SwiftData.")
     }
 }

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct LogIn: View {
     @Environment(\.modelContext) private var context
@@ -17,7 +16,11 @@ struct LogIn: View {
     @State private var showPassword = false
     @State private var showErrorMessage = false
     @State private var errorMessage = ""
-    @Binding var isLoggedIn: Bool 
+    @Binding var isLoggedIn: Bool
+
+    init(isLoggedIn: Binding<Bool>) {
+        _isLoggedIn = isLoggedIn
+    }
 
     var body: some View {
         VStack {
@@ -110,7 +113,7 @@ struct LogIn: View {
             Spacer()
         }
         .onAppear {
-            logInVM = UsuarioLogIn(context: context)
+            logInVM = UsuarioLogIn()
         }
     }
 
@@ -119,14 +122,9 @@ struct LogIn: View {
 
         do {
             try await logInVM.login(email: email, password: password)
+            router.navigate(to: .homeView)
             showErrorMessage = false
             isLoggedIn = true
-            
-            if let usuario = logInVM.usuario {
-                context.insert(usuario)
-                try context.save()
-                print("Usuario guardado en SwiftData.")
-            }
 
         } catch {
             showErrorMessage = true
@@ -134,3 +132,4 @@ struct LogIn: View {
         }
     }
 }
+

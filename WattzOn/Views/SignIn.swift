@@ -6,19 +6,10 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct SignIn: View {
-    @Environment(\.modelContext) private var context
     @EnvironmentObject var router: Router
-    @StateObject private var registerVM: UsuarioRegister = {
-        do {
-            let container = try ModelContainer(for: Usuario.self)
-            return UsuarioRegister(context: container.mainContext)
-        } catch {
-            fatalError("Error al crear el ModelContainer: \(error)")
-        }
-    }()
+    @StateObject private var registerVM = UsuarioRegister()
     
     @State private var email = ""
     @State private var password = ""
@@ -30,7 +21,7 @@ struct SignIn: View {
     @State private var showPassword = false
     @State private var showErrorMessage = false
     @State private var errorMessage = ""
-    @Binding var isLoggedIn: Bool 
+    @Binding var isLoggedIn: Bool
 
     var body: some View {
         ScrollView {
@@ -185,10 +176,8 @@ struct SignIn: View {
                 
                 Spacer()
             }
-            .onAppear {
-                registerVM.context = context
-            }
         }
+        .navigationBarBackButtonHidden(true)  
     }
 
     private func registerUser() async {
@@ -208,10 +197,10 @@ struct SignIn: View {
             try await registerVM.register(nombre: name, apellido: apellido, email: email, password: password, ciudad: ciudad, estado: estado)
             showErrorMessage = false
             isLoggedIn = true
+            router.navigate(to: .homeView)
         } catch {
             showErrorMessage = true
             errorMessage = "Hubo un error en el registro."
         }
     }
 }
-

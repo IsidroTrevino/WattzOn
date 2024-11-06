@@ -43,7 +43,7 @@ struct WattzonApp: App {
                     case .tipDetailView:
                         TipDetailView()
                     case .homeView:
-                        HomeView()
+                        ContentView()
                     }
                 }
             }
