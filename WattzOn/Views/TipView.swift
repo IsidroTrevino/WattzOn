@@ -10,6 +10,9 @@ import Charts
 
 struct TipView: View {
     @EnvironmentObject var router: Router
+    
+    @State var tipVM = TipsViewModel()
+    
     var body: some View {
         VStack {
             Text("Tips")
@@ -18,22 +21,24 @@ struct TipView: View {
                 .bold()
             
             ScrollView(.horizontal, showsIndicators: false) {
-               HStack(spacing: 20) {
-                   ForEach(0..<4) { _ in
-                       Button(action: {
-                           router.navigate(to: .tipDetailView)
-                       }) {
-                           Text("¿Cómo reducir la energía de mi hogar?")
-                               .foregroundColor(.black)
-                               .frame(width: 220, height: 90)
-                               .background(Color.white)
-                               .cornerRadius(30)
-                               .shadow(color: .black.opacity(0.3), radius: 7, x: 0, y: 5)
-                       }
-                   }
-               }
-               .padding()
+                HStack(spacing: 20) {
+                ForEach(tipVM.arrTip) { tip in
+                    Button(action: {
+                        router.navigate(to: .tipDetailView(tip: tip))
+                    }) {
+                        Text(tip.tipName)
+                            .foregroundColor(.black)
+                            .frame(width: 220, height: 90)
+                            .background(tip.color.opacity(0.4)) //tip.color
+                            .cornerRadius(30)
+                            .shadow(color: .black.opacity(0.3), radius: 7, x: 0, y: 5)
+                    }
+
+                    }
+                }
+                .padding()
             }
+
 
             Text("Tareas diarias")
                 .font(.system(size: 22, weight: .medium))
@@ -43,7 +48,7 @@ struct TipView: View {
                 ForEach(["Apagar la luz", "No prender el clima", "Cargar electrónicos a las 2pm"], id: \.self) { task in
                     ZStack {
                         Rectangle()
-                            .fill(Color.green.opacity(0.6))
+                            .fill(Color.wattz.opacity(0.6))
                             .frame(width: 120, height: 100)
                             .cornerRadius(30)
                             .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
@@ -65,6 +70,12 @@ struct TipView: View {
                     Text("Ahorro de luz")
                         .padding(.horizontal, 3)
                     Spacer()
+                    Image("doughnut")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30)
+                        .padding(.leading)
+                    Spacer()
                 }
                 .frame(width: 300 , height: 50)
                 .background(RoundedRectangle(cornerRadius: 8).fill(Color.yellow.opacity(0.2)))
@@ -77,6 +88,11 @@ struct TipView: View {
                     Text("Uso de electrodomésticos")
                         .padding(.horizontal, 1)
                     Spacer()
+                    Image("doughnut")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30)
+                    Spacer()
                 }
                 .frame(width: 300 , height: 50)
                 .foregroundColor(.black)
@@ -88,6 +104,11 @@ struct TipView: View {
                         .padding()
                     Text("Uso de dispositivos")
                         .padding(.horizontal, 3)
+                    Spacer()
+                    Image("doughnut")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30)
                     Spacer()
                 }
                 .frame(width: 300 , height: 50)
@@ -107,4 +128,5 @@ struct TipView: View {
 
 #Preview {
     TipView()
+        .environmentObject(Router())
 }

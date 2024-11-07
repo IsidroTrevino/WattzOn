@@ -40,8 +40,8 @@ struct WattzonApp: App {
                         RecibosView()
                     case .tipView:
                         TipView()
-                    case .tipDetailView:
-                        TipDetailView()
+                    case .tipDetailView(let tip):
+                        TipDetailView(tip: tip)
                     case .homeView:
                         ContentView()
                     }
