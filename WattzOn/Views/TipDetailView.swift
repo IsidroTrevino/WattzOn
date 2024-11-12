@@ -9,21 +9,63 @@ import SwiftUI
 
 struct TipDetailView: View {
     @Environment(\.presentationMode) var presentationMode
+    let tip : TipsModel
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("¿Por qué WattzOn?")
-                .font(.system(size: 60))
+        VStack(alignment: .leading) {
+            Text(tip.tipName)
+                .font(.system(size: 40))
                 .fontWeight(.bold)
                 .foregroundStyle(.wattz)
                 .frame(maxWidth: .infinity, alignment: .center)
-                .padding(.top, -120)
-                .padding(.bottom, 50)
+                .padding(.bottom)
             
-            Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            )
-            .padding(.horizontal, 30)
-
+            Text(tip.description)
+                .font(.system(size: 20))
+                .padding(.horizontal, 30)
+                .padding(.bottom)
+                
+            ScrollView {
+                Text("Estrategia 1: \(tip.estrategia1)")
+                    .italic()
+                    .padding(.horizontal, 30)
+                
+                Text(tip.textEs1)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom)
+                
+                Text("Estrategia 2: \(tip.estrategia2)")
+                    .italic()
+                    .padding(.horizontal, 30)
+                
+                Text(tip.textEs2)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom)
+                
+                Text("Estrategia 3: \(tip.estrategia3)")
+                    .italic()
+                    .padding(.horizontal, 30)
+                
+                Text(tip.textEs3)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom)
+                
+                Text("Estrategia 4: \(tip.estrategia4)")
+                    .italic()
+                    .padding(.horizontal, 30)
+                
+                Text(tip.textEs4)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom)
+                
+                Text("Estrategia 5: \(tip.estrategia5)")
+                    .italic()
+                    .padding(.horizontal, 30)
+                
+                Text(tip.textEs5)
+                    .padding(.horizontal, 30)
+                
+            }
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
@@ -36,10 +78,9 @@ struct TipDetailView: View {
                     .foregroundStyle(Color.wattz)
             }
         })
-        .navigationTitle("Tips")
     }
 }
 
 #Preview {
-    TipDetailView()
+    TipDetailView(tip: TipsModel.defaultTip)
 }

@@ -16,13 +16,14 @@ class Router: ObservableObject {
         case domesticoView
         case recibosListView
         case tipView
-        case tipDetailView
+        case tipDetailView(tip: TipsModel)
         case homeView
     }
 
     func navigate(to destination: Destination) {
         navPath.append(destination)
     }
+    
 
     func goBack() {
         _ = navPath.popLast()
