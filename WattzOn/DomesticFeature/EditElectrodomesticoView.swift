@@ -19,7 +19,8 @@ struct EditElectrodomesticoView: View {
     @State private var marca: String
     @State private var tipo: String
     @State private var modelo: String
-    @State private var potenciaWatts: String
+    @State private var consumowatts: String
+    @State private var descripcion: String
     @State private var selectedImage: UIImage?
     @State private var showImagePicker = false
     @State private var showAlert = false
@@ -31,9 +32,10 @@ struct EditElectrodomesticoView: View {
         _marca = State(initialValue: electrodomestico.marca)
         _tipo = State(initialValue: electrodomestico.tipo)
         _modelo = State(initialValue: electrodomestico.modelo)
-        _potenciaWatts = State(initialValue: String(electrodomestico.potenciaWatts))
+        _consumowatts = State(initialValue: String(electrodomestico.consumowatts))
+        _descripcion = State(initialValue: electrodomestico.descripcion)
 
-        if let imagePath = electrodomestico.imagePath,
+        if let imagePath = electrodomestico.urlimagen,
            let uiImage = UIImage(contentsOfFile: imagePath) {
             _selectedImage = State(initialValue: uiImage)
         } else {
@@ -49,8 +51,9 @@ struct EditElectrodomesticoView: View {
                     TextField("Marca", text: $marca)
                     TextField("Tipo", text: $tipo)
                     TextField("Modelo", text: $modelo)
-                    TextField("Potencia (Watts)", text: $potenciaWatts)
+                    TextField("Potencia (Watts)", text: $consumowatts)
                         .keyboardType(.decimalPad)
+                    TextField("Descripción", text: $descripcion)
                 }
 
                 Section(header: Text("Foto")) {
@@ -84,17 +87,16 @@ struct EditElectrodomesticoView: View {
     }
 
     private func saveChanges() {
-        // Validar la entrada
-        guard let potencia = Double(potenciaWatts), !nombre.isEmpty else {
-            // Mostrar mensaje de error si la validación falla
+        // Validate the input
+        guard let potencia = Int(consumowatts), !nombre.isEmpty else {
             alertMessage = "Asegúrate de ingresar un nombre y un valor válido para la potencia."
             showAlert = true
             return
         }
 
-        var imagePath: String? = electrodomestico.imagePath
+        var imagePath: String? = electrodomestico.urlimagen
 
-        // Guardar nueva imagen seleccionada, si aplica
+        // Save selected image, if applicable
         if let image = selectedImage {
             if let data = image.jpegData(compressionQuality: 0.8) {
                 let filename = UUID().uuidString + ".jpg"
@@ -104,8 +106,8 @@ struct EditElectrodomesticoView: View {
                     try data.write(to: fileURL)
                     imagePath = fileURL.path
 
-                    // Eliminar la imagen anterior si existe
-                    if let oldImagePath = electrodomestico.imagePath {
+                    // Delete the previous image if it exists
+                    if let oldImagePath = electrodomestico.urlimagen {
                         try FileManager.default.removeItem(atPath: oldImagePath)
                     }
                 } catch {
@@ -114,25 +116,26 @@ struct EditElectrodomesticoView: View {
             }
         }
 
-        // Eliminar la imagen si se ha quitado la selección
-        if selectedImage == nil && electrodomestico.imagePath != nil {
+        // Remove image if unselected
+        if selectedImage == nil && electrodomestico.urlimagen != nil {
             do {
-                try FileManager.default.removeItem(atPath: electrodomestico.imagePath!)
+                try FileManager.default.removeItem(atPath: electrodomestico.urlimagen!)
                 imagePath = nil
             } catch {
                 print("Error al eliminar la imagen: \(error)")
             }
         }
 
-        // Actualizar el electrodoméstico
+        // Update the appliance details
         electrodomestico.nombre = nombre
         electrodomestico.marca = marca
         electrodomestico.tipo = tipo
         electrodomestico.modelo = modelo
-        electrodomestico.potenciaWatts = potencia
-        electrodomestico.imagePath = imagePath
+        electrodomestico.consumowatts = potencia
+        electrodomestico.descripcion = descripcion
+        electrodomestico.urlimagen = imagePath
 
-        // Guardar cambios en el contexto de datos
+        // Save changes to the context
         do {
             try modelContext.save()
         } catch {
@@ -144,10 +147,14 @@ struct EditElectrodomesticoView: View {
 }
 
 #Preview {
-    EditElectrodomesticoView(electrodomestico: Electrodomestico(id: .init(), nombre: "", marca: "", tipo: "", modelo: "", potenciaWatts: 0, imagePath: nil))
-}
-
-
-#Preview {
-    EditElectrodomesticoView(electrodomestico: Electrodomestico(id: .init(), nombre: "", marca: "", tipo: "", modelo: "", potenciaWatts: 0, imagePath: nil))
+    EditElectrodomesticoView(electrodomestico: Electrodomestico(
+        electrodomesticoId: 1,
+        nombre: "Refrigerador",
+        tipo: "Electrodoméstico",
+        consumowatts: 150,
+        descripcion: "Descripción del electrodoméstico",
+        urlimagen: "cfe",
+        marca: "Marca",
+        modelo: "Modelo X"
+    ))
 }

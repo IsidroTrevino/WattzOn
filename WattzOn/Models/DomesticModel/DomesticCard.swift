@@ -12,7 +12,7 @@ struct DomesticCard: View {
 
     var body: some View {
         HStack {
-            if let imagePath = electrodomestico.imagePath,
+            if let imagePath = electrodomestico.urlimagen,
                let uiImage = UIImage(contentsOfFile: imagePath) {
                 Image(uiImage: uiImage)
                     .resizable()
@@ -32,7 +32,7 @@ struct DomesticCard: View {
                     .font(.headline)
                 Text(electrodomestico.marca)
                     .font(.subheadline)
-                Text("Potencia: \(String(format: "%.2f", electrodomestico.potenciaWatts)) W")
+                Text("Potencia: \(electrodomestico.consumowatts).00 W")
                     .font(.subheadline)
             }
             Spacer()
@@ -47,26 +47,31 @@ struct DomesticCard_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             DomesticCard(electrodomestico: Electrodomestico(
+                electrodomesticoId: 1,
                 nombre: "Refrigerador",
-                marca: "LG",
                 tipo: "Electrodoméstico",
-                modelo: "GR-349SQF",
-                potenciaWatts: 150.0,
-                imagePath: nil
+                consumowatts: 150,
+                descripcion: "Refrigerador de gran capacidad",
+                urlimagen: "cfe",
+                marca: "LG",
+                modelo: "GR-349SQF"
             ))
             .previewLayout(.sizeThatFits)
             .padding()
 
             DomesticCard(electrodomestico: Electrodomestico(
+                electrodomesticoId: 2,
                 nombre: "Microondas",
+                tipo: "Pequeño Electrodoméstico",
+                consumowatts: 700,
+                descripcion: "Microondas compacto",
+                urlimagen: "cfe",
                 marca: "Marca",
-                tipo: "Tipo",
-                modelo: "Modelo",
-                potenciaWatts: 700.0,
-                imagePath: nil
+                modelo: "Modelo"
             ))
             .previewLayout(.sizeThatFits)
             .padding()
         }
+
     }
 }

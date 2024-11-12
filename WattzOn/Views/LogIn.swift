@@ -8,15 +8,19 @@
 import SwiftUI
 
 struct LogIn: View {
-    @Environment(\.modelContext) private var context
     @EnvironmentObject var router: Router
+    @Environment(\.modelContext) private var context
     @State private var logInVM: UsuarioLogIn?
     @State private var email = ""
     @State private var password = ""
     @State private var showPassword = false
     @State private var showErrorMessage = false
     @State private var errorMessage = ""
-    @Binding var isLoggedIn: Bool
+    @Binding var isLoggedIn: Bool {
+        didSet {
+            UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
+        }
+    }
 
     init(isLoggedIn: Binding<Bool>) {
         _isLoggedIn = isLoggedIn
@@ -30,7 +34,7 @@ struct LogIn: View {
                 Text("WattzOn")
                     .font(.system(size: 70))
                     .fontWeight(.bold)
-                    .foregroundStyle(.wattz)
+                    .foregroundStyle(.orange)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.top, -120)
                     .padding(.bottom, 50)
@@ -113,7 +117,10 @@ struct LogIn: View {
             Spacer()
         }
         .onAppear {
-            logInVM = UsuarioLogIn()
+            let storedLoginState = UserDefaults.standard.bool(forKey: "isLoggedIn")
+            isLoggedIn = storedLoginState
+            
+            logInVM = UsuarioLogIn(context: context)
         }
     }
 
@@ -122,9 +129,9 @@ struct LogIn: View {
 
         do {
             try await logInVM.login(email: email, password: password)
-            router.navigate(to: .homeView)
             showErrorMessage = false
             isLoggedIn = true
+            router.navigate(to: .homeView)
 
         } catch {
             showErrorMessage = true
@@ -132,4 +139,3 @@ struct LogIn: View {
         }
     }
 }
-

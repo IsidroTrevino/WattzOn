@@ -59,7 +59,7 @@ struct HomeView: View {
                 )
                 .padding(.horizontal, 20)
             
-            LightbulbView(consumption: viewModel.consumoEnergetico.consumo / 1000) //
+            LightbulbView(consumption: viewModel.consumoEnergetico.consumo / 1000) 
                 .frame(width: 100, height: 200)
                 .padding(.top, 20)
             

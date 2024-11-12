@@ -84,13 +84,16 @@ struct AddElectrodomesticoView: View {
         }
 
         let nuevoElectrodomestico = Electrodomestico(
+            electrodomesticoId: 0,
             nombre: nombre,
-            marca: marca,
             tipo: tipo,
-            modelo: modelo,
-            potenciaWatts: potencia,
-            imagePath: imagePath
+            consumowatts: Int(potencia),
+            descripcion: "Descripción predeterminada",
+            urlimagen: imagePath ?? "",
+            marca: marca,
+            modelo: modelo
         )
+
 
         modelContext.insert(nuevoElectrodomestico)
         dismiss()

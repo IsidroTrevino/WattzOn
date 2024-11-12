@@ -34,8 +34,6 @@ struct PerfilView: View {
                     )
             }
             
-            
-            
             Divider()
                 .frame(width: 250)
                 .background(Color.gray)

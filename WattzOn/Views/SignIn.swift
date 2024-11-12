@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SignIn: View {
+    @Environment(\.modelContext) private var context
     @EnvironmentObject var router: Router
-    @StateObject private var registerVM = UsuarioRegister()
+    @State private var registerVM: UsuarioRegister?
     
     @State private var email = ""
     @State private var password = ""
@@ -177,10 +179,17 @@ struct SignIn: View {
                 Spacer()
             }
         }
-        .navigationBarBackButtonHidden(true)  
+        .onAppear {
+            if registerVM == nil {
+                registerVM = UsuarioRegister(context: context)
+            }
+        }
+        .navigationBarBackButtonHidden(true)
     }
 
     private func registerUser() async {
+        guard let registerVM = registerVM else { return }
+
         guard !name.isEmpty, !apellido.isEmpty, !ciudad.isEmpty, !estado.isEmpty, !email.isEmpty, !password.isEmpty else {
             errorMessage = "Por favor, llena todos los campos."
             showErrorMessage = true

@@ -14,11 +14,13 @@ import AVFoundation // Importante para manejar permisos de la cámara
 struct DomesticoView: View {
     @EnvironmentObject var router: Router
     @Environment(\.modelContext) private var modelContext
-    @Query var electrodomesticos: [Electrodomestico]
+    @StateObject private var viewModel = ElectrodomesticoViewModel()
 
     @State private var showAddSheet = false
     @State private var showActionSheet = false
     @State private var selectedElectrodomestico: Electrodomestico?
+    
+    @Query var usuarios: [Usuario]
 
     @State private var showImagePicker = false
     @State private var selectedImage: UIImage?
@@ -55,7 +57,7 @@ struct DomesticoView: View {
                 .multilineTextAlignment(.center)
                 .padding(.top, 10)
 
-            if electrodomesticos.isEmpty {
+            if viewModel.electrodomesticos.isEmpty {
                 VStack {
                     Image(systemName: "house.fill")
                         .font(.system(size: 60))
@@ -67,7 +69,7 @@ struct DomesticoView: View {
                 .padding(.top, 50)
             } else {
                 List {
-                    ForEach(electrodomesticos) { electrodomestico in
+                    ForEach(viewModel.electrodomesticos) { electrodomestico in
                         DomesticCard(electrodomestico: electrodomestico)
                             .padding(.vertical, 5)
                             .onTapGesture {
@@ -129,8 +131,15 @@ struct DomesticoView: View {
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(selectedImage: $selectedImage, sourceType: imagePickerSourceType)
         }
-        .onChange(of: selectedImage) { image in
-            if let image = image {
+        .onAppear {
+            if let usuarioId = usuarios.first?.usuarioId {
+                Task {
+                    await viewModel.fetchElectrodomesticos(for: usuarioId)
+                }
+            }
+        }
+        .onChange(of: selectedImage) { newImage in
+            if let image = newImage {
                 processImage(image)
             }
         }
@@ -151,10 +160,10 @@ struct DomesticoView: View {
 
     private func deleteElectrodomestico(at offsets: IndexSet) {
         for index in offsets {
-            let electrodomestico = electrodomesticos[index]
+            let electrodomestico = viewModel.electrodomesticos[index]
 
             // Eliminar el archivo de imagen si existe
-            if let imagePath = electrodomestico.imagePath {
+            if let imagePath = electrodomestico.urlimagen {
                 do {
                     try FileManager.default.removeItem(atPath: imagePath)
                 } catch {
@@ -238,16 +247,15 @@ struct DomesticoView: View {
     }
 
     func createElectrodomestico(from product: EnergyStarModel, imagePath: String?) {
-        // Convertir los valores numéricos
-        let potenciaWatts = Double(product.category_2_short_idle_watts) ?? 0.0
-
         let nuevoElectrodomestico = Electrodomestico(
+            electrodomesticoId: Int.random(in: 1...10000),
             nombre: product.model_name,
-            marca: product.brand_name,
             tipo: product.type,
-            modelo: product.model_number,
-            potenciaWatts: potenciaWatts,
-            imagePath: imagePath
+            consumowatts: Int(Double(product.category_2_short_idle_watts) ?? 0.0),
+            descripcion: "Descripción del electrodoméstico",
+            urlimagen: imagePath ?? "",
+            marca: product.brand_name,
+            modelo: product.model_number
         )
 
         DispatchQueue.main.async {
