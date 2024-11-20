@@ -113,6 +113,7 @@ struct LogIn: View {
                 }
             }
             .padding(.horizontal, 30)
+            .navigationBarBackButtonHidden()
             
             Spacer()
         }

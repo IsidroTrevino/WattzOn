@@ -31,6 +31,8 @@ struct ContentView: View {
                 }
         }
         .navigationBarBackButtonHidden()
+        .modelContainer(for: [Usuario.self])
+        
     }
 }
 
