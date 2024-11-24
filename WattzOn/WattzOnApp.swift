@@ -14,7 +14,7 @@ struct WattzonApp: App {
     @State private var isLoggedIn = false
 
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([Electrodomestico.self, Recibo.self, Usuario.self])
+        let schema = Schema([Usuario.self])
         return try! ModelContainer(for: schema)
     }()
 
@@ -44,6 +44,20 @@ struct WattzonApp: App {
                         TipDetailView(tip: tip)
                     case .homeView:
                         ContentView()
+                    case .addElectrodomesticoView:
+                        AddElectrodomesticoView()
+                    case .addElectrodomesticoViewWithData(let electrodomestico):
+                        AddElectrodomesticoView(electrodomestico: electrodomestico)
+                    case .editElectrodomesticoView(let electrodomestico):
+                        EditElectrodomesticoView(electrodomestico: electrodomestico)
+                    case .electrodomesticoReadingsInfo:
+                        ElectrodomesticoReadingsInfo()
+                    case .addReciboView(let initialData):
+                        AddReciboView(initialData: initialData)
+                    case .editReciboView(let recibo):
+                        EditReciboView(recibo: recibo)
+                    case .reciboReadingsInfo(let field):
+                        ReciboReadingsInfo(field: field)
                     }
                 }
             }

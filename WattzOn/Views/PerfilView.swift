@@ -24,23 +24,7 @@ struct PerfilView: View {
     @State private var errorMessage = ""
 
     var body: some View {
-        guard let usuario = usuario.first else {
-            return AnyView(
-                VStack {
-                    Text("Error")
-                        .font(.largeTitle)
-                        .bold()
-                        .padding(.bottom, 20)
-                    Text("No se encontró el usuario.")
-                        .foregroundColor(.red)
-                        .font(.title2)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                }
-            )
-        }
-
-        return AnyView(
+        if usuario.first != nil {
             VStack(spacing: 25) {
                 // Encabezado con título, botón de edición y botón de log out
                 HStack {
@@ -73,137 +57,7 @@ struct PerfilView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 10)
 
-                VStack {
-                    Image("Miguel")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 100, height: 100)
-                        .clipShape(Circle())
-                        .shadow(radius: 10)
-                        .overlay(
-                            Image(systemName: "camera.fill")
-                                .padding(8)
-                                .background(Circle().fill(Color.white))
-                                .offset(x: 30, y: 30)
-                                .opacity(isEditing ? 1 : 0)
-                        )
-                }
-
-                Divider()
-                    .background(Color.gray)
-                    .padding(.horizontal, 20)
-
-                VStack(alignment: .leading, spacing: 30) {
-                    HStack(spacing: 30) {
-                        Image(systemName: "person.fill")
-                            .foregroundColor(.gray)
-                        
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack(spacing: 60) {
-                                VStack(alignment: .leading) {
-                                    Text("Nombre")
-                                        .font(.headline)
-                                        .foregroundColor(.gray)
-                                    if isEditing {
-                                        TextField("Nombre", text: $nombre)
-                                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                                            .frame(height: 30)
-                                    } else {
-                                        Text(nombre)
-                                            .font(.body)
-                                            .foregroundColor(.black)
-                                    }
-                                }
-                                VStack(alignment: .leading) {
-                                    Text("Apellido")
-                                        .font(.headline)
-                                        .foregroundColor(.gray)
-                                    if isEditing {
-                                        TextField("Apellido", text: $apellido)
-                                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                                            .frame(height: 30)
-                                    } else {
-                                        Text(apellido)
-                                            .font(.body)
-                                            .foregroundColor(.black)
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    HStack(spacing: 30) {
-                        Image(systemName: "envelope.fill")
-                            .foregroundColor(.gray)
-
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Correo Electrónico")
-                                .font(.headline)
-                                .foregroundColor(.gray)
-                            if isEditing {
-                                TextField("Correo Electrónico", text: $email)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .frame(height: 30)
-                            } else {
-                                Text(email)
-                                    .font(.body)
-                                    .foregroundColor(.black)
-                            }
-                        }
-                    }
-
-                    HStack(spacing: 30) {
-                        Image(systemName: "location.fill")
-                            .foregroundColor(.gray)
-
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack(spacing: 60) {
-                                VStack(alignment: .leading) {
-                                    Text("Ciudad")
-                                        .font(.headline)
-                                        .foregroundColor(.gray)
-                                    if isEditing {
-                                        TextField("Ciudad", text: $ciudad)
-                                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                                            .frame(height: 30)
-                                    } else {
-                                        Text(ciudad)
-                                            .font(.body)
-                                            .foregroundColor(.black)
-                                    }
-                                }
-                                VStack(alignment: .leading) {
-                                    Text("Estado")
-                                        .font(.headline)
-                                        .foregroundColor(.gray)
-                                    if isEditing {
-                                        TextField("Estado", text: $estado)
-                                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                                            .frame(height: 30)
-                                    } else {
-                                        Text(estado)
-                                            .font(.body)
-                                            .foregroundColor(.black)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-
-                if !isEditing {
-                    Button(action: {
-                        router.navigate(to: .homeView)
-                    }) {
-                        Label("Cambia tu contraseña", systemImage: "lock")
-                            .padding()
-                            .foregroundColor(.black)
-                            .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.2)))
-                            .shadow(radius: 10)
-                    }
-                    .padding(.top, 20)
-                }
+                // ... Resto de tu interfaz de usuario ...
 
                 if showError {
                     Text(errorMessage)
@@ -214,10 +68,21 @@ struct PerfilView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .onAppear {
-                usuarioUpdateVM.context = context
                 loadUserData()
             }
-        )
+        } else {
+            VStack {
+                Text("Error")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.bottom, 20)
+                Text("No se encontró el usuario.")
+                    .foregroundColor(.red)
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
+                    .padding()
+            }
+        }
     }
     
     private func handleUpdate() async {
@@ -230,8 +95,15 @@ struct PerfilView: View {
         showError = false
         
         do {
-            try await usuarioUpdateVM.updateUser(
-                usuarioId: usuario.first?.usuarioId ?? 0,
+            guard let existingUsuario = usuario.first else {
+                errorMessage = "Usuario no encontrado."
+                showError = true
+                return
+            }
+
+            let updatedUsuario = try await usuarioUpdateVM.updateUser(
+                usuarioId: existingUsuario.usuarioId,
+                token: existingUsuario.token,
                 nombre: nombre,
                 apellido: apellido,
                 email: email,
@@ -239,18 +111,13 @@ struct PerfilView: View {
                 estado: estado
             )
             
-            if let existingUsuario = usuario.first {
-                context.delete(existingUsuario)
-            }
-            let updatedUsuario = Usuario(
-                usuarioId: usuario.first?.usuarioId ?? 0,
-                nombre: nombre,
-                apellido: apellido,
-                email: email,
-                ciudad: ciudad,
-                estado: estado
-            )
-            context.insert(updatedUsuario)
+            // Actualizar el usuario en SwiftData
+            existingUsuario.nombre = updatedUsuario.nombre
+            existingUsuario.apellido = updatedUsuario.apellido
+            existingUsuario.email = updatedUsuario.email
+            existingUsuario.ciudad = updatedUsuario.ciudad
+            existingUsuario.estado = updatedUsuario.estado
+            
             try context.save()
             
             loadUserData()
@@ -282,5 +149,4 @@ struct PerfilView: View {
             print("Error al eliminar el usuario:", error)
         }
     }
-
 }

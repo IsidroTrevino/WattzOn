@@ -32,7 +32,7 @@ struct DomesticCard: View {
                     .font(.headline)
                 Text(electrodomestico.marca)
                     .font(.subheadline)
-                Text("Potencia: \(electrodomestico.consumowatts).00 W")
+                Text("Potencia: \(String(format: "%.2f", electrodomestico.consumowatts)) W")
                     .font(.subheadline)
             }
             Spacer()
@@ -43,6 +43,7 @@ struct DomesticCard: View {
     }
 }
 
+/*
 struct DomesticCard_Previews: PreviewProvider {
     static var previews: some View {
         Group {
@@ -75,3 +76,4 @@ struct DomesticCard_Previews: PreviewProvider {
 
     }
 }
+*/

@@ -11,8 +11,8 @@ import SwiftData
 struct SignIn: View {
     @Environment(\.modelContext) private var context
     @EnvironmentObject var router: Router
-    @State private var registerVM: UsuarioRegister?
-    
+    @State private var registerVM = UsuarioRegister()
+
     @State private var email = ""
     @State private var password = ""
     @State private var name = ""
@@ -179,33 +179,29 @@ struct SignIn: View {
                 Spacer()
             }
         }
-        .onAppear {
-            if registerVM == nil {
-                registerVM = UsuarioRegister(context: context)
-            }
-        }
         .navigationBarBackButtonHidden(true)
     }
 
     private func registerUser() async {
-        guard let registerVM = registerVM else { return }
-
-        guard !name.isEmpty, !apellido.isEmpty, !ciudad.isEmpty, !estado.isEmpty, !email.isEmpty, !password.isEmpty else {
-            errorMessage = "Por favor, llena todos los campos."
-            showErrorMessage = true
-            return
-        }
-        
-        guard password == confirmPassword else {
-            errorMessage = "Las contraseñas no coinciden."
-            showErrorMessage = true
-            return
-        }
+        // Ya no es necesario el guard let
+        // ... validaciones ...
 
         do {
-            try await registerVM.register(nombre: name, apellido: apellido, email: email, password: password, ciudad: ciudad, estado: estado)
+            let usuario = try await registerVM.register(nombre: name, apellido: apellido, email: email, password: password, ciudad: ciudad, estado: estado)
             showErrorMessage = false
             isLoggedIn = true
+
+            do {
+                context.insert(usuario)
+                try context.save()
+                print("Usuario registrado y guardado en SwiftData con token.")
+            } catch {
+                print("Error al guardar el usuario en SwiftData: \(error)")
+                showErrorMessage = true
+                errorMessage = "Error al guardar los datos localmente."
+                return
+            }
+
             router.navigate(to: .homeView)
         } catch {
             showErrorMessage = true

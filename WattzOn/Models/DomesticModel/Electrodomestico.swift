@@ -5,22 +5,36 @@
 //  Created by Fernando Espidio on 16/10/24.
 //
 
-import Foundation
-import SwiftData
+// Electrodomestico.swift
 
-@Model
-final class Electrodomestico: Identifiable, Decodable {
-    @Attribute(.unique) var electrodomesticoId: Int
+import Foundation
+
+final class Electrodomestico: Identifiable, Codable, Equatable, Hashable {
+    var electrodomesticoId: Int?
+    var usuarioId: Int
     var nombre: String
     var tipo: String
-    var consumowatts: Int
-    var descripcion: String
+    var consumowatts: Double
+    var descripcion: String?
     var urlimagen: String?
     var marca: String
     var modelo: String
+    var fecharegistro: String?
 
-    init(electrodomesticoId: Int, nombre: String, tipo: String, consumowatts: Int, descripcion: String, urlimagen: String?, marca: String, modelo: String) {
+    init(
+        electrodomesticoId: Int,
+        usuarioId: Int,
+        nombre: String,
+        tipo: String,
+        consumowatts: Double,
+        descripcion: String? = nil,
+        urlimagen: String? = nil,
+        marca: String,
+        modelo: String,
+        fecharegistro: String? = nil
+    ) {
         self.electrodomesticoId = electrodomesticoId
+        self.usuarioId = usuarioId
         self.nombre = nombre
         self.tipo = tipo
         self.consumowatts = consumowatts
@@ -28,33 +42,17 @@ final class Electrodomestico: Identifiable, Decodable {
         self.urlimagen = urlimagen
         self.marca = marca
         self.modelo = modelo
+        self.fecharegistro = fecharegistro
     }
 
-    // MARK: - Decodable conformance
-    enum CodingKeys: String, CodingKey {
-        case electrodomesticoId
-        case nombre
-        case tipo
-        case consumowatts
-        case descripcion
-        case urlimagen
-        case marca
-        case modelo
+    // Implementación de Equatable
+    static func == (lhs: Electrodomestico, rhs: Electrodomestico) -> Bool {
+        return lhs.id == rhs.id
     }
-
-    required convenience init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        let electrodomesticoId = try container.decode(Int.self, forKey: .electrodomesticoId)
-        let nombre = try container.decode(String.self, forKey: .nombre)
-        let tipo = try container.decode(String.self, forKey: .tipo)
-        let consumowatts = try container.decode(Int.self, forKey: .consumowatts)
-        let descripcion = try container.decode(String.self, forKey: .descripcion)
-        let urlimagen = try container.decodeIfPresent(String.self, forKey: .urlimagen)
-        let marca = try container.decode(String.self, forKey: .marca)
-        let modelo = try container.decode(String.self, forKey: .modelo)
-
-        self.init(electrodomesticoId: electrodomesticoId, nombre: nombre, tipo: tipo, consumowatts: consumowatts, descripcion: descripcion, urlimagen: urlimagen, marca: marca, modelo: modelo)
+    
+    // Conformidad al protocolo Hashable
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
+    
 }
-

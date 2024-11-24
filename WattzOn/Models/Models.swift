@@ -17,16 +17,19 @@ class Usuario: Identifiable, Decodable {
     var email: String
     var ciudad: String?
     var estado: String?
+    var token: String // Nuevo campo para el token
 
-    init(usuarioId: Int, nombre: String, apellido: String, email: String, ciudad: String?, estado: String?) {
+    init(usuarioId: Int, nombre: String, apellido: String, email: String, ciudad: String?, estado: String?, token: String) {
         self.usuarioId = usuarioId
         self.nombre = nombre
         self.apellido = apellido
         self.email = email
         self.ciudad = ciudad
         self.estado = estado
+        self.token = token
     }
     
+    // Actualizar el inicializador de Decodable
     required convenience init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -36,17 +39,12 @@ class Usuario: Identifiable, Decodable {
         let email = try container.decode(String.self, forKey: .email)
         let ciudad = try container.decodeIfPresent(String.self, forKey: .ciudad)
         let estado = try container.decodeIfPresent(String.self, forKey: .estado)
+        let token = try container.decodeIfPresent(String.self, forKey: .token) ?? ""
         
-        self.init(usuarioId: usuarioId, nombre: nombre, apellido: apellido, email: email, ciudad: ciudad, estado: estado)
+        self.init(usuarioId: usuarioId, nombre: nombre, apellido: apellido, email: email, ciudad: ciudad, estado: estado, token: token)
     }
     
     private enum CodingKeys: String, CodingKey {
-        case usuarioId, nombre, apellido, email, ciudad, estado
+        case usuarioId, nombre, apellido, email, ciudad, estado, token
     }
-}
-
-
-struct ConsumoEnergetico {
-    var ahorro: Double
-    var consumo: Double
 }

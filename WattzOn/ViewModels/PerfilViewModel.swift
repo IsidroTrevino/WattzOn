@@ -17,7 +17,8 @@ class PerfilViewModel: ObservableObject {
             apellido: "Treviño Medina",
             email: "EmiliaYeri@hotmail.com",
             ciudad: "Monterrey",
-            estado: "Nuevo León"
+            estado: "Nuevo León",
+            token: "String"
         )
     }
     

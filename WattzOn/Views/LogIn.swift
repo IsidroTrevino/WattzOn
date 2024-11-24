@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct LogIn: View {
     @EnvironmentObject var router: Router
     @Environment(\.modelContext) private var context
-    @State private var logInVM: UsuarioLogIn?
+    @State private var logInVM = UsuarioLogIn()
+
     @State private var email = ""
     @State private var password = ""
     @State private var showPassword = false
@@ -119,24 +121,27 @@ struct LogIn: View {
         }
         .onAppear {
             let storedLoginState = UserDefaults.standard.bool(forKey: "isLoggedIn")
-            isLoggedIn = storedLoginState
-            
-            logInVM = UsuarioLogIn(context: context)
+            isLoggedIn = storedLoginState            
         }
     }
 
     private func login() async {
-        guard let logInVM = logInVM else { return }
-
         do {
-            try await logInVM.login(email: email, password: password)
+            let usuario = try await logInVM.login(email: email, password: password)
             showErrorMessage = false
             isLoggedIn = true
-            router.navigate(to: .homeView)
 
+            // Inserta el usuario en el context aquí
+            context.insert(usuario)
+            try context.save()
+            print("Usuario guardado en SwiftData con token.")
+
+            router.navigate(to: .homeView)
         } catch {
             showErrorMessage = true
             errorMessage = "Correo o contraseña incorrectos."
         }
     }
+
+
 }

@@ -22,15 +22,15 @@ struct ReciboCard: View {
                 Text(recibo.titulo)
                     .font(.headline)
                 
-                Text("Fecha: \(formattedDate(recibo.fechaRegistro))")
+                Text("Fecha: \(formattedDate(recibo.FinPeriodo))")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                 
-                Text("Lectura Actual: \(recibo.lecturaActual)")
+                Text("Lectura Actual: \(recibo.LecturaActual)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                 
-                Text("Lectura Anterior: \(recibo.lecturaAnterior)")
+                Text("Lectura Anterior: \(recibo.LecturaAnterior)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
@@ -52,23 +52,3 @@ struct ReciboCard: View {
     }
 }
 
-struct ReciboCard_Previews: PreviewProvider {
-    static var previews: some View {
-        ReciboCard(recibo: Recibo(
-            fechaRegistro: Date(),
-            lecturaActual: 1200,
-            lecturaAnterior: 1100,
-            totales: [100],
-            precios: [1.5],
-            totalFinales: [150.0]
-        ))
-        .previewLayout(.sizeThatFits)
-        .padding()
-    }
-}
-
-/*
-#Preview {
-    ReciboCard()
-}
-*/
