@@ -12,18 +12,32 @@ import SwiftData
 struct WattzonApp: App {
     @StateObject private var router = Router()
     @State private var isLoggedIn = false
+    @AppStorage("isOnboardingCompleted") private var isOnboardingCompleted = false // Use @AppStorage
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([Usuario.self])
         return try! ModelContainer(for: schema)
     }()
+    
+    init() {
+        // Configura los valores predeterminados
+        UserDefaults.standard.set(3, forKey: "usuarioId")
+        UserDefaults.standard.set(
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvSWQiOjIsImlhdCI6MTczMjI5NTUxNn0.LCX6zYt2ngIYulw7jfZpOwWw1KyT3ib0LpyDeR2nw1E",
+            forKey: "token"
+        )
+    }
 
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $router.navPath) {
                 Group {
-                    if isLoggedIn {
-                        ContentView()
+                    if true {
+                        if isOnboardingCompleted {
+                            ContentView()
+                        } else {
+                            OnboardingView(isOnboardingCompleted: $isOnboardingCompleted)
+                        }
                     } else {
                         LogIn(isLoggedIn: $isLoggedIn)
                     }
