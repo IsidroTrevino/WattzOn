@@ -16,9 +16,10 @@ class ElectrodomesticoViewModel: ObservableObject {
     @Published var errorMessage: String = ""
     @Published var showErrorAlert: Bool = false
     @Environment(\.modelContext) private var modelContext
-
+    
+    // Función para traer los electrdomésticos desde la API
     func fetchElectrodomesticosFromAPI(usuarioId: Int, token: String) async throws -> [Electrodomestico] {
-        let urlString = "http://\(ipAddress)/api/wattzon/electrodomestico/usuario/\(usuarioId)"
+        let urlString = "\(secureConnection)://\(ipAddress)/api/wattzon/electrodomestico/usuario/\(usuarioId)"
         print("Fetching from URL: \(urlString)")
 
         guard let url = URL(string: urlString) else {
@@ -56,14 +57,7 @@ class ElectrodomesticoViewModel: ObservableObject {
         let usuario = getCurrentUsuario()
         let token = usuario?.token ?? ""
         
-        /*
-        guard let usuario = getCurrentUsuario(), let token = usuario.token else {
-            print("Usuario no encontrado")
-            throw NSError(domain: "Usuario no encontrado", code: 0)
-        }
-         */
-        
-        guard let url = URL(string: "http://\(ipAddress)/api/wattzon/electrodomestico") else {
+        guard let url = URL(string: "\(secureConnection)://\(ipAddress)/api/wattzon/electrodomestico") else {
             print("URL inválida")
             throw URLError(.badURL)
         }
@@ -83,6 +77,7 @@ class ElectrodomesticoViewModel: ObservableObject {
             throw error
         }
 
+        // Empieza la solicitud
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
 
@@ -115,7 +110,7 @@ class ElectrodomesticoViewModel: ObservableObject {
             throw NSError(domain: "ID del electrodoméstico no disponible", code: 0)
         }
 
-        guard let url = URL(string: "http://\(ipAddress)/api/wattzon/electrodomestico/\(electrodomesticoId)") else {
+        guard let url = URL(string: "\(secureConnection)://\(ipAddress)/api/wattzon/electrodomestico/\(electrodomesticoId)") else {
             print("URL inválida")
             throw URLError(.badURL)
         }
@@ -135,6 +130,7 @@ class ElectrodomesticoViewModel: ObservableObject {
             throw error
         }
 
+        // Hacer la solicitud
         do {
             let (_, response) = try await URLSession.shared.data(for: urlRequest)
 
@@ -179,7 +175,7 @@ class ElectrodomesticoViewModel: ObservableObject {
         let usuario = getCurrentUsuario()
         let token = usuario?.token ?? ""
         
-        guard let url = URL(string: "http://\(ipAddress)/api/wattzon/electrodomestico/\(electrodomesticoId)") else {
+        guard let url = URL(string: "\(secureConnection)://\(ipAddress)/api/wattzon/electrodomestico/\(electrodomesticoId)") else {
             print("URL inválida")
             throw URLError(.badURL)
         }

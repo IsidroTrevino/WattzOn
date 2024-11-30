@@ -12,23 +12,24 @@ import PhotosUI
 
 struct EditElectrodomesticoView: View {
     @EnvironmentObject var router: Router
-    @StateObject private var viewModel = ElectrodomesticoViewModel()
-
+    
+    @StateObject var viewModel = ElectrodomesticoViewModel()
+    
     var electrodomestico: Electrodomestico
-
-    @State private var nombre: String
-    @State private var marca: String
-    @State private var tipo: String
-    @State private var modelo: String
-    @State private var potenciaWatts: String
-    @State private var descripcion: String
-    @State private var selectedImage: UIImage?
-    @State private var imagePath: String?
-
-    @State private var showImagePicker = false
-    @State private var showAlert = false
-    @State private var alertMessage = ""
-
+    
+    @State var nombre: String
+    @State var marca: String
+    @State var tipo: String
+    @State var modelo: String
+    @State var potenciaWatts: String
+    @State var descripcion: String
+    @State var selectedImage: UIImage?
+    @State var imagePath: String?
+    
+    @State var showImagePicker = false
+    @State var showAlert = false
+    @State var alertMessage = ""
+    
     init(electrodomestico: Electrodomestico) {
         self.electrodomestico = electrodomestico
         _nombre = State(initialValue: electrodomestico.nombre)
@@ -45,7 +46,7 @@ struct EditElectrodomesticoView: View {
             _selectedImage = State(initialValue: nil)
         }
     }
-
+    
     var body: some View {
         HStack {
             Button(action: {
@@ -93,7 +94,7 @@ struct EditElectrodomesticoView: View {
                 }
                 TextField("Descripción", text: $descripcion)
             }
-
+            
             Section(header: Text("Foto")) {
                 if let image = selectedImage {
                     Image(uiImage: image)
@@ -132,62 +133,5 @@ struct EditElectrodomesticoView: View {
         .alert(isPresented: $viewModel.showErrorAlert) {
             Alert(title: Text("Error"), message: Text(viewModel.errorMessage), dismissButton: .default(Text("OK")))
         }
-    }
-
-    private func selectNewImage() {
-        showImagePicker = true
-    }
-
-    private func saveChanges() {
-        // Validar la entrada
-        guard let potencia = Double(potenciaWatts), !nombre.isEmpty else {
-            // Mostrar mensaje de error si la validación falla
-            alertMessage = "Asegúrate de ingresar un nombre y un valor válido para la potencia."
-            showAlert = true
-            return
-        }
-
-        // Actualizar el electrodoméstico local
-        var updatedElectrodomestico = electrodomestico
-        updatedElectrodomestico.nombre = nombre
-        updatedElectrodomestico.marca = marca
-        updatedElectrodomestico.tipo = tipo
-        updatedElectrodomestico.modelo = modelo
-        updatedElectrodomestico.consumowatts = potencia
-        updatedElectrodomestico.descripcion = descripcion
-        updatedElectrodomestico.urlimagen = imagePath
-
-        Task {
-            do {
-                try await viewModel.updateElectrodomestico(updatedElectrodomestico)
-                DispatchQueue.main.async {
-                    router.goBack()
-                }
-            } catch {
-                print("Error al actualizar el electrodoméstico:", error)
-                DispatchQueue.main.async {
-                    self.viewModel.errorMessage = "Error al actualizar el electrodoméstico."
-                    self.viewModel.showErrorAlert = true
-                }
-            }
-        }
-    }
-
-    func saveImageToDocuments(image: UIImage) -> String? {
-        guard let data = image.jpegData(compressionQuality: 0.8) else { return nil }
-        let filename = UUID().uuidString + ".jpg"
-        let url = getDocumentsDirectory().appendingPathComponent(filename)
-
-        do {
-            try data.write(to: url)
-            return url.path
-        } catch {
-            print("Error al guardar la imagen: \(error)")
-            return nil
-        }
-    }
-
-    func getDocumentsDirectory() -> URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 }

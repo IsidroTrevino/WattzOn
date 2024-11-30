@@ -16,7 +16,7 @@ class Concepto: Codable, Identifiable, Equatable, Hashable {
     var idCategoriaConcepto: Int? // Para enviar al crear/actualizar
     var TotalPeriodo: Int
     var Precio: Double
-
+    
     init(idConcepto: Int? = nil, idRecibo: Int? = nil, idCategoriaConcepto: Int? = nil, TotalPeriodo: Int, Precio: Double) {
         self.idConcepto = idConcepto
         self.idRecibo = idRecibo
@@ -33,6 +33,16 @@ class Concepto: Codable, Identifiable, Equatable, Hashable {
     // Conformidad al protocolo Hashable
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+    
+    var description: String {
+        """
+        Concepto(idConcepto: \(idConcepto ?? 0), 
+                 idRecibo: \(idRecibo ?? 0), 
+                 idCategoriaConcepto: \(idCategoriaConcepto ?? 0), 
+                 TotalPeriodo: \(TotalPeriodo), 
+                 Precio: \(Precio))
+        """
     }
 }
 
@@ -66,7 +76,7 @@ class Recibo: Codable, Identifiable, Equatable, Hashable {
         self.Subtotal = Subtotal
         self.conceptos = conceptos
     }
-
+    
     var titulo: String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "es_ES")
@@ -75,12 +85,10 @@ class Recibo: Codable, Identifiable, Equatable, Hashable {
         return "Recibo \(formattedDate)"
     }
     
-    // Implementación de Equatable
     static func == (lhs: Recibo, rhs: Recibo) -> Bool {
         return lhs.id == rhs.id
     }
     
-    // Conformidad al protocolo Hashable
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

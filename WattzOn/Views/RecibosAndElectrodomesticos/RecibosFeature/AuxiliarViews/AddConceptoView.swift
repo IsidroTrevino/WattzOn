@@ -12,10 +12,11 @@ struct AddConceptoView: View {
     @EnvironmentObject var conceptosData: ConceptosData
     @EnvironmentObject var router: Router
 
-    @State private var idCategoriaConcepto: Int = 1
+    @State private var idCategoriaConcepto: Int?
     @State private var totalPeriodo: String = ""
     @State private var precio: String = ""
-    
+    @State private var selectedCategory: Int?
+
     var body: some View {
         // Barra de navegación personalizada
         HStack {
@@ -27,7 +28,7 @@ struct AddConceptoView: View {
                     .foregroundColor(Color(hex: "#FFA800"))
             }
             Spacer()
-            Text("Agregar Recibo")
+            Text("Agregar Concepto")
                 .font(.headline)
                 .foregroundColor(.black)
             Spacer()
@@ -46,10 +47,34 @@ struct AddConceptoView: View {
         .padding(.horizontal)
         .padding(.top)
         Form {
-            Picker("Categoría", selection: $idCategoriaConcepto) {
-                Text("Básico").tag(1)
-                Text("Intermedio").tag(2)
-                Text("Excedente").tag(3)
+            if let _ = idCategoriaConcepto {
+                Menu {
+                    ForEach(availableCategories(), id: \.self) { category in
+                        Button(action: {
+                            idCategoriaConcepto = category
+                            selectedCategory = category
+                        }) {
+                            Text(categoryName(for: category))
+                                .foregroundColor(colorForCategory(category))
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text("Categoría")
+                            .foregroundColor(Color.black)
+                        Spacer()
+                        if let selectedCategory = selectedCategory {
+                            Text(categoryName(for: selectedCategory))
+                                .foregroundColor(colorForCategory(selectedCategory))
+                        } else {
+                            Text("Seleccionar")
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+            } else {
+                Text("No hay categorías disponibles")
+                    .foregroundColor(.gray)
             }
             TextField("Total Periodo", text: $totalPeriodo)
                 .keyboardType(.numberPad)
@@ -63,9 +88,24 @@ struct AddConceptoView: View {
         }, trailing: Button("Guardar") {
             saveConcepto()
         })
+        .onAppear {
+            let available = availableCategories()
+            if let firstAvailable = available.first {
+                idCategoriaConcepto = firstAvailable
+                selectedCategory = firstAvailable
+            } else {
+                // No hay categorías disponibles
+                idCategoriaConcepto = nil
+            }
+        }
     }
     
     private func saveConcepto() {
+        guard let idCategoriaConcepto = idCategoriaConcepto else {
+            // No hay categoría seleccionada, no se puede guardar
+            return
+        }
+        
         guard let totalPeriodoInt = Int(totalPeriodo),
               let precioDouble = Double(precio) else {
             // Mostrar mensaje de error si es necesario
@@ -73,22 +113,50 @@ struct AddConceptoView: View {
         }
         
         let nuevoConcepto = Concepto(
-            idConcepto: nil, // Nuevo concepto, idConcepto será asignado por el servidor
-            idRecibo: nil, // idRecibo se asignará después de crear el recibo
+            idConcepto: nil,
+            idRecibo: nil,
             idCategoriaConcepto: idCategoriaConcepto,
             TotalPeriodo: totalPeriodoInt,
             Precio: precioDouble
         )
         
-        print("CONCEPTO:")
-        print(nuevoConcepto.idCategoriaConcepto)
-        print(nuevoConcepto.TotalPeriodo)
-        print(nuevoConcepto.Precio)
-        
-        
-        
         conceptosData.conceptos.append(nuevoConcepto)
         presentationMode.wrappedValue.dismiss()
     }
     
+    // Función para obtener las categorías disponibles
+    private func availableCategories() -> [Int] {
+        let existingCategories = conceptosData.conceptos.map { $0.idCategoriaConcepto }
+        let allCategories = [1, 2, 3] // 1: Básico, 2: Intermedio, 3: Excedente
+        let available = allCategories.filter { !existingCategories.contains($0) }
+        return available
+    }
+    
+    // Función para obtener el nombre de la categoría
+    private func categoryName(for id: Int) -> String {
+        switch id {
+        case 1:
+            return "Básico"
+        case 2:
+            return "Intermedio"
+        case 3:
+            return "Excedente"
+        default:
+            return "Desconocido"
+        }
+    }
+    
+    // Función para obtener el color de la categoría
+    private func colorForCategory(_ id: Int) -> Color {
+        switch id {
+        case 1:
+            return Color.green
+        case 2:
+            return Color.orange
+        case 3:
+            return Color.red
+        default:
+            return Color.black
+        }
+    }
 }

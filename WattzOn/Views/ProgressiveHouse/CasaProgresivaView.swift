@@ -28,17 +28,6 @@ struct CasaProgresivaView: View {
                     .font(.title)
                     .padding()
                 Spacer()
-                Button(action: {
-                    Task {
-                        await electrodomesticoViewModel.fetchElectrodomesticos()
-                        await reciboViewModel.fetchRecibos()
-                        calcularConsumo()
-                    }
-                }) {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.title2)
-                }
-                .padding(.trailing, 20)
             }
             
             Text("Consumo: \(consumoTotalPeriodo, specifier: "%.2f") kWh")
@@ -46,26 +35,49 @@ struct CasaProgresivaView: View {
             
             Spacer()
             
-            ZStack {
-                Image("progressive")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                
-                Rectangle()
-                    .fill(Color(hex: "#FFA800").opacity(0.5))
-                    .frame(height: UIScreen.main.bounds.height * porcentajeCompletado)
-                    .mask(
-                        Image("progressive")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    )
-                    .animation(.easeInOut, value: porcentajeCompletado)
+            GeometryReader { geometry in
+                ZStack {
+                    Image("progressive") // Imagen de fondo (negra)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    
+                    Image("progressivefill") // Imagen que se llenará
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .mask(
+                            Rectangle()
+                                .frame(width: geometry.size.width, height: geometry.size.height * porcentajeCompletado)
+                                .offset(y: geometry.size.height * (1 - porcentajeCompletado))
+                        )
+                        .animation(.easeInOut, value: porcentajeCompletado)
+                }
+                .onTapGesture {
+                    showElectrodomesticosList = true
+                }
             }
-            .onTapGesture {
-                showElectrodomesticosList = true
-            }
+            .aspectRatio(contentMode: .fit)
             
             Spacer()
+            
+            // Barra de progreso personalizada
+            VStack {
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(height: 10)
+                    
+                    Rectangle()
+                        .fill(Color(hex: "#FFA800"))
+                        .frame(width: UIScreen.main.bounds.width * (porcentajeConsumoRegistrado / 100), height: 10)
+                        .animation(.easeInOut, value: porcentajeConsumoRegistrado)
+                }
+                .padding(.horizontal)
+                
+                Text("Registro de consumo: \(porcentajeConsumoRegistrado, specifier: "%.2f")%")
+                    .padding(.top, 5)
+            }
+            .padding(.bottom)
         }
         .onAppear {
             Task {
@@ -75,15 +87,12 @@ struct CasaProgresivaView: View {
             }
         }
         .onReceive(tabSelection.$selectedTab) { newValue in
-            print("Hola")
             if newValue == "MiHogar" {
                 Task {
                     await electrodomesticoViewModel.fetchElectrodomesticos()
                     await reciboViewModel.fetchRecibos()
                     calcularConsumo()
                 }
-                print("Hola2")
-
             }
         }
         .sheet(isPresented: $showElectrodomesticosList) {
@@ -91,7 +100,7 @@ struct CasaProgresivaView: View {
                 consumoTotalPeriodo: consumoTotalPeriodo
             )
             .environmentObject(electrodomesticoViewModel)
-            .environmentObject(usageViewModel) // Ensure this is also injected
+            .environmentObject(usageViewModel)
         }
     }
     
@@ -101,9 +110,6 @@ struct CasaProgresivaView: View {
         }
         
         consumoTotalPeriodo = Double(abs(ultimoRecibo.LecturaActual - ultimoRecibo.LecturaAnterior))
-        
-        //consumoTotalPeriodo = Double(abs(ultimoRecibo.LecturaActual))
-
         costoTotalPeriodo = ultimoRecibo.Subtotal
         
         var consumoElectrodomesticos: Double = 0.0

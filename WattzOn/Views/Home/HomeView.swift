@@ -40,7 +40,7 @@ struct HomeView: View {
                 }
                 .padding(.trailing, 20)
             }
-            /*
+    
             // Scan Receipt Button
             if !homeViewModel.receiptUploaded {
                 if homeViewModel.isProcessing {
@@ -68,7 +68,7 @@ struct HomeView: View {
                     }
                 }
             }
-             */
+    
             // Savings and Consumption
             VStack(spacing: 10) {
                 Text("Has Ahorrado")
@@ -79,14 +79,9 @@ struct HomeView: View {
                     .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.orange)
                 
-                Text("8,289 kWh")
-                    .font(.title2)
-                    .foregroundColor(.orange)
-                /*
                 Text("\(homeViewModel.consumoEnergetico.consumo, specifier: "%.0f") kWh")
                     .font(.title2)
                     .foregroundColor(.orange)
-                 */
             }
             .padding()
             .background(
@@ -109,7 +104,6 @@ struct HomeView: View {
                 Image("grafica")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                /*
                 Text("No hay datos de consumo disponibles.")
                     .padding()
                     .background(
@@ -118,9 +112,7 @@ struct HomeView: View {
                             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 4)
                     )
                     .padding(.horizontal, 20)
-                 */
             } else {
-                /*
                 ChartView(consumptionData: homeViewModel.periodos.enumerated().map { index, periodo in
                     ConsumptionData(day: periodo, consumption: homeViewModel.kwh[index])
                 })
@@ -132,10 +124,6 @@ struct HomeView: View {
                         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 4)
                 )
                 .padding(.horizontal, 20)
-                 */
-                Image("grafica")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
             }
 
             // Show Mission Card if more than one appliance

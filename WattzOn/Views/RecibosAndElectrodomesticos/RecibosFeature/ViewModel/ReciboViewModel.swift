@@ -11,6 +11,8 @@ import Foundation
 import SwiftUI
 import SwiftData
 
+let secureConnection = "http"
+
 class ReciboViewModel: ObservableObject {
     @Published var recibos: [Recibo] = []
     @Published var errorMessage: String = ""
@@ -18,6 +20,36 @@ class ReciboViewModel: ObservableObject {
 
     var modelContext: ModelContext?
 
+    private let customDecoder: JSONDecoder
+
+    init() {
+        self.customDecoder = JSONDecoder()
+        self.customDecoder.dateDecodingStrategy = .custom({ decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+
+            // Intentar decodificar con ISO-8601 con segundos fraccionarios
+            let isoFormatter = ISO8601DateFormatter()
+            isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            
+            if let date = isoFormatter.date(from: dateString) {
+                return date
+            }
+
+            // Intentar con un formateador personalizado
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            
+            if let date = formatter.date(from: dateString) {
+                return date
+            }
+            
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(dateString)")
+        })
+    }
+    
     // Función para obtener los recibos desde la API
     func fetchRecibos() async {
         guard let currentUser = getCurrentUsuario() else {
@@ -29,6 +61,8 @@ class ReciboViewModel: ObservableObject {
 
         do {
             let recibos = try await fetchRecibosFromAPI(usuarioId: usuarioId, token: token)
+            print("Recibos obtenidos: \(recibos.count)")
+            
             DispatchQueue.main.async {
                 self.recibos = recibos
             }
@@ -41,7 +75,7 @@ class ReciboViewModel: ObservableObject {
     }
 
     func fetchRecibosFromAPI(usuarioId: Int, token: String) async throws -> [Recibo] {
-        let urlString = "http://\(ipAddress)/api/wattzon/recibo/usuario/\(usuarioId)"
+        let urlString = "\(secureConnection)://\(ipAddress)/api/wattzon/recibo/usuario/\(usuarioId)"
         print("Fetching from URL: \(urlString)")
         
         guard let url = URL(string: urlString) else {
@@ -93,7 +127,7 @@ class ReciboViewModel: ObservableObject {
                 throw URLError(.badServerResponse)
             }
 
-            let recibos = try decoder.decode([Recibo].self, from: data)
+            let recibos = try customDecoder.decode([Recibo].self, from: data) // Usa customDecoder
             return recibos
         } catch {
             print("Error al realizar la solicitud:", error)
@@ -109,7 +143,7 @@ class ReciboViewModel: ObservableObject {
         }
         let token = usuario.token
 
-        guard let url = URL(string: "http://\(ipAddress)/api/wattzon/recibo/add") else {
+        guard let url = URL(string: "\(secureConnection)://\(ipAddress)/api/wattzon/recibo/add") else {
             print("URL inválida")
             throw URLError(.badURL)
         }
@@ -150,21 +184,30 @@ class ReciboViewModel: ObservableObject {
             if let httpResponse = response as? HTTPURLResponse {
                 print("Código de estado HTTP:", httpResponse.statusCode)
             }
+            
+            /*
+            // Print the raw JSON response for debugging
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("JSON recibido del servidor:")
+                print(jsonString)
+            }
+             */
 
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 print("Error: Respuesta del servidor no fue 200 OK")
                 throw URLError(.badServerResponse)
             }
 
-            let decoder = JSONDecoder()
-            let createdRecibo = try decoder.decode(Recibo.self, from: data)
+            let createdRecibo = try customDecoder.decode(Recibo.self, from: data) // Usa customDecoder
+            
+            // print("Conceptos del recibo seleccionado: \(createdRecibo.conceptos.map { $0.description }.joined(separator: "\n"))")
+
             return createdRecibo
         } catch {
             print("Error al realizar la solicitud:", error)
             throw error
         }
     }
-
 
     // MARK: - Función para actualizar un recibo a través de la API
     func updateRecibo(_ recibo: Recibo) async throws {
@@ -179,7 +222,7 @@ class ReciboViewModel: ObservableObject {
             throw NSError(domain: "ID del recibo no disponible", code: 0, userInfo: nil)
         }
 
-        guard let url = URL(string: "http://\(ipAddress)/api/wattzon/recibo/\(idRecibo)") else {
+        guard let url = URL(string: "\(secureConnection)://\(ipAddress)/api/wattzon/recibo/\(idRecibo)") else {
             print("URL inválida")
             throw URLError(.badURL)
         }
@@ -231,7 +274,7 @@ class ReciboViewModel: ObservableObject {
         }
         let token = usuario.token
 
-        guard let url = URL(string: "http://\(ipAddress)/api/wattzon/recibo/\(idRecibo)") else {
+        guard let url = URL(string: "\(secureConnection)://\(ipAddress)/api/wattzon/recibo/\(idRecibo)") else {
             print("URL inválida")
             throw URLError(.badURL)
         }

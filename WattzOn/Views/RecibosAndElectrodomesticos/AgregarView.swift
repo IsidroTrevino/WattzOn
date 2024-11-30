@@ -60,7 +60,7 @@ struct AgregarView: View {
             }
             
             // Vista de Bombilla
-            LightbulbView(consumption: 8.29)
+            LightbulbView(consumption: viewModel.consumoEnergetico.consumo / 1000)
                 .frame(width: 100, height: 200)
                 .padding(.top, 20)
             

@@ -252,6 +252,10 @@ class HomeViewModel: ObservableObject {
                 
                 if let results = request.results as? [VNRecognizedTextObservation] {
                     let extractedText = results.compactMap { $0.topCandidates(1).first?.string }.joined(separator: "\n")
+                    
+                    print("Texto reconocido de la imagen:") // Aquí se imprime el texto
+                    print(extractedText)
+                    
                     if extractedText.isEmpty {
                         self.errorMessage = "No se encontró texto en la imagen."
                         self.showErrorAlert = true
@@ -292,7 +296,7 @@ class HomeViewModel: ObservableObject {
         consumoEnergetico.ahorro += amount
     }
     
-    private func processText(_ text: String) {
+    func processText(_ text: String) {
         var tempPeriodos: [String] = []
         var tempKwh: [Double] = []
         var tempImporte: [Double] = []

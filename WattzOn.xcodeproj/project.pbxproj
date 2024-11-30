@@ -6,11 +6,27 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		2FBBE8D72CFAE4C500835C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E6F85A272CB99EDE00461EE6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6F85A2E2CB99EDE00461EE6;
+			remoteInfo = WattzOn;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		2FBBE8D32CFAE4C500835C63 /* TestingFer.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestingFer.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6F85A2F2CB99EDE00461EE6 /* WattzOn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WattzOn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		2FBBE8D42CFAE4C500835C63 /* TestingFer */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TestingFer;
+			sourceTree = "<group>";
+		};
 		E6F85A312CB99EDE00461EE6 /* WattzOn */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = WattzOn;
@@ -19,6 +35,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2FBBE8D02CFAE4C500835C63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E6F85A2C2CB99EDE00461EE6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				E6F85A312CB99EDE00461EE6 /* WattzOn */,
+				2FBBE8D42CFAE4C500835C63 /* TestingFer */,
 				E6F85A302CB99EDE00461EE6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				E6F85A2F2CB99EDE00461EE6 /* WattzOn.app */,
+				2FBBE8D32CFAE4C500835C63 /* TestingFer.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +73,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2FBBE8D22CFAE4C500835C63 /* TestingFer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2FBBE8DB2CFAE4C500835C63 /* Build configuration list for PBXNativeTarget "TestingFer" */;
+			buildPhases = (
+				2FBBE8CF2CFAE4C500835C63 /* Sources */,
+				2FBBE8D02CFAE4C500835C63 /* Frameworks */,
+				2FBBE8D12CFAE4C500835C63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2FBBE8D82CFAE4C500835C63 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				2FBBE8D42CFAE4C500835C63 /* TestingFer */,
+			);
+			name = TestingFer;
+			packageProductDependencies = (
+			);
+			productName = TestingFer;
+			productReference = 2FBBE8D32CFAE4C500835C63 /* TestingFer.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		E6F85A2E2CB99EDE00461EE6 /* WattzOn */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E6F85A3D2CB99EDF00461EE6 /* Build configuration list for PBXNativeTarget "WattzOn" */;
@@ -80,6 +128,10 @@
 				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
+					2FBBE8D22CFAE4C500835C63 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = E6F85A2E2CB99EDE00461EE6;
+					};
 					E6F85A2E2CB99EDE00461EE6 = {
 						CreatedOnToolsVersion = 16.0;
 					};
@@ -100,11 +152,19 @@
 			projectRoot = "";
 			targets = (
 				E6F85A2E2CB99EDE00461EE6 /* WattzOn */,
+				2FBBE8D22CFAE4C500835C63 /* TestingFer */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2FBBE8D12CFAE4C500835C63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E6F85A2D2CB99EDE00461EE6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +175,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2FBBE8CF2CFAE4C500835C63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E6F85A2B2CB99EDE00461EE6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +191,51 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2FBBE8D82CFAE4C500835C63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6F85A2E2CB99EDE00461EE6 /* WattzOn */;
+			targetProxy = 2FBBE8D72CFAE4C500835C63 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		2FBBE8D92CFAE4C500835C63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q92SA53V78;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = wattzon.TestingFer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WattzOn.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WattzOn";
+			};
+			name = Debug;
+		};
+		2FBBE8DA2CFAE4C500835C63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Q92SA53V78;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = wattzon.TestingFer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WattzOn.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WattzOn";
+			};
+			name = Release;
+		};
 		E6F85A3B2CB99EDF00461EE6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -307,6 +418,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2FBBE8DB2CFAE4C500835C63 /* Build configuration list for PBXNativeTarget "TestingFer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2FBBE8D92CFAE4C500835C63 /* Debug */,
+				2FBBE8DA2CFAE4C500835C63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E6F85A2A2CB99EDE00461EE6 /* Build configuration list for PBXProject "WattzOn" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -16,11 +16,11 @@ struct AddElectrodomesticoUsageView: View {
     let electrodomesticoId: Int
     let potenciaWatts: Double
 
-    @State private var tiempoUsoDiario: String = ""
-    @State private var diasUsoSemanal: String = ""
-    @State private var consumoKWh: Double = 0.0
-    @State private var costo: Double = 0.0
-    @State private var showResults = false
+    @State var tiempoUsoDiario: String = ""
+    @State var diasUsoSemanal: String = ""
+    @State var consumoKWh: Double = 0.0
+    @State var costo: Double = 0.0
+    @State var showResults = false
 
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -108,7 +108,7 @@ struct AddElectrodomesticoUsageView: View {
         }
     }
 
-    private func calcularConsumoYCosto() {
+    func calcularConsumoYCosto() {
         guard let horasDiarias = Double(tiempoUsoDiario),
               let diasSemana = Int(diasUsoSemanal),
               horasDiarias > 0,

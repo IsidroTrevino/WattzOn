@@ -11,7 +11,7 @@ struct EditReciboView: View {
     @EnvironmentObject var router: Router
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = ReciboViewModel()
-    @StateObject private var conceptosData = ConceptosData()
+    @StateObject private var conceptosData: ConceptosData
 
     var recibo: Recibo
 
@@ -30,9 +30,9 @@ struct EditReciboView: View {
         _lecturaActual = State(initialValue: String(recibo.LecturaActual))
         _lecturaAnterior = State(initialValue: String(recibo.LecturaAnterior))
         _subtotal = State(initialValue: String(recibo.Subtotal))
-        _conceptosData = StateObject(wrappedValue: ConceptosData())
-        conceptosData.conceptos = recibo.conceptos
+        _conceptosData = StateObject(wrappedValue: ConceptosData(conceptos: recibo.conceptos))
     }
+
 
     var body: some View {
         // Barra de navegación personalizada
@@ -131,21 +131,23 @@ struct EditReciboView: View {
                         Text("Categoría: \(conceptoCategoriaName(concepto))")
                         Spacer()
                         Text("Total: \(concepto.TotalPeriodo)")
-                        Text("Precio: \(concepto.Precio)")
+                        Text("Precio: \(concepto.Precio, specifier: "%.2f")")
                     }
                 }
                 .onDelete { indices in
                     conceptosData.conceptos.remove(atOffsets: indices)
                 }
-                Button(action: {
-                    isAddingConcepto = true
-                }) {
-                    HStack {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundColor(Color(hex: "#FFA800"))
-
-                        Text("Agregar Concepto")
-                            .foregroundColor(Color(hex: "#FFA800"))
+                // Mostrar el botón solo si hay menos de 3 conceptos
+                if conceptosData.conceptos.count < 3 {
+                    Button(action: {
+                        isAddingConcepto = true
+                    }) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(Color(hex: "#FFA800"))
+                            Text("Agregar Concepto")
+                                .foregroundColor(Color(hex: "#FFA800"))
+                        }
                     }
                 }
             }

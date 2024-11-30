@@ -9,13 +9,17 @@ import SwiftUI
 
 class ConceptosData: ObservableObject {
     @Published var conceptos: [Concepto] = []
+    
+    init(conceptos: [Concepto] = []) {
+        self.conceptos = conceptos
+    }
 }
 
 struct AddReciboView: View {
     @EnvironmentObject var router: Router
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = ReciboViewModel()
-    @StateObject var conceptosData = ConceptosData()
+    @StateObject var conceptosData: ConceptosData
 
     @State private var inicioPeriodo: Date
     @State private var finPeriodo: Date
@@ -32,8 +36,7 @@ struct AddReciboView: View {
             _lecturaActual = State(initialValue: String(data.lecturaActual))
             _lecturaAnterior = State(initialValue: String(data.lecturaAnterior))
             _subtotal = State(initialValue: String(data.subtotal))
-            _conceptosData = StateObject(wrappedValue: ConceptosData())
-            conceptosData.conceptos = data.conceptos
+            _conceptosData = StateObject(wrappedValue: ConceptosData(conceptos: data.conceptos))
         } else {
             _inicioPeriodo = State(initialValue: Date())
             _finPeriodo = State(initialValue: Date())
@@ -141,20 +144,23 @@ struct AddReciboView: View {
                         Text("Categoría: \(conceptoCategoriaName(concepto))")
                         Spacer()
                         Text("Total: \(concepto.TotalPeriodo)")
-                        Text("Precio: \(concepto.Precio)")
+                        Text("Precio: \(concepto.Precio, specifier: "%.2f")")
                     }
                 }
                 .onDelete { indices in
                     conceptosData.conceptos.remove(atOffsets: indices)
                 }
-                Button(action: {
-                    isAddingConcepto = true
-                }) {
-                    HStack {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundColor(Color(hex: "#FFA800"))
-                        Text("Agregar Concepto")
-                            .foregroundColor(Color(hex: "#FFA800"))
+                // Mostrar el botón solo si hay menos de 3 conceptos
+                if conceptosData.conceptos.count < 3 {
+                    Button(action: {
+                        isAddingConcepto = true
+                    }) {
+                        HStack {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(Color(hex: "#FFA800"))
+                            Text("Agregar Concepto")
+                                .foregroundColor(Color(hex: "#FFA800"))
+                        }
                     }
                 }
             }
@@ -226,7 +232,8 @@ struct AddReciboView: View {
             Subtotal: subtotalDouble,
             conceptos: conceptosData.conceptos
         )
-
+        
+        /*
         print("Debug - Valores y Tipos:")
         print("usuarioId: \(usuarioId), Tipo: \(type(of: usuarioId))")
         print("LecturaActual: \(lecturaActualInt), Tipo: \(type(of: lecturaActualInt))")
@@ -235,6 +242,7 @@ struct AddReciboView: View {
         print("FinPeriodo: \(finPeriodo), Tipo: \(type(of: finPeriodo))")
         print("Subtotal: \(subtotalDouble), Tipo: \(type(of: subtotalDouble))")
         print("Conceptos: \(conceptosData.conceptos), Tipo: \(type(of: conceptosData.conceptos))")
+        */
         
         Task {
             do {

@@ -173,7 +173,11 @@ struct OnboardingView: View {
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
     }
+    
+    
 }
+
+
 
 
 /*

@@ -1,8 +1,8 @@
 import Foundation
 import SwiftData
 
-//let ipAddress = "wattzonapi.onrender.com"
-let ipAddress = "10.22.136.188:3000"
+// let ipAddress = "wattzonapi.onrender.com"
+let ipAddress = "192.168.100.22:3000"
 
 @MainActor
 class UsuarioLogIn: ObservableObject {

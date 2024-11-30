@@ -105,7 +105,12 @@ class OCRProcessor {
             )
             conceptos.append(concepto)
         }
+        
 
+        print("Palabras procesadas: \(words)")
+        print("Números enteros detectados: \(integers)")
+        print("Números decimales detectados: \(doubles)")
+        
         return ExtractedReceiptData(
             lecturaActual: lecturaActual,
             lecturaAnterior: lecturaAnterior,
