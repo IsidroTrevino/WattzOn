@@ -23,6 +23,8 @@ struct LogIn: View {
             UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
         }
     }
+    let onboardingCompleted = UserDefaults.standard.bool(forKey: "isOnboardingCompleted")
+
 
     init(isLoggedIn: Binding<Bool>) {
         _isLoggedIn = isLoggedIn
@@ -121,7 +123,7 @@ struct LogIn: View {
         }
         .onAppear {
             let storedLoginState = UserDefaults.standard.bool(forKey: "isLoggedIn")
-            isLoggedIn = storedLoginState            
+            isLoggedIn = storedLoginState
         }
     }
 
@@ -131,17 +133,19 @@ struct LogIn: View {
             showErrorMessage = false
             isLoggedIn = true
 
-            // Inserta el usuario en el context aquí
             context.insert(usuario)
             try context.save()
             print("Usuario guardado en SwiftData con token.")
 
-            router.navigate(to: .homeView)
+            if onboardingCompleted {
+                router.navigate(to: .homeView)
+            } else {
+                router.navigate(to: .onBoardingView)
+            }
         } catch {
             showErrorMessage = true
             errorMessage = "Correo o contraseña incorrectos."
         }
     }
-
 
 }

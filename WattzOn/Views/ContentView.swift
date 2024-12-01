@@ -57,7 +57,7 @@ struct ContentView: View {
                 .tag("Perfil")
         }
         .navigationBarBackButtonHidden()
-        .modelContainer(for: [Usuario.self])
+        .modelContainer(for: [UsuarioResponse.self])
         .environmentObject(tabSelection)
     }
 }

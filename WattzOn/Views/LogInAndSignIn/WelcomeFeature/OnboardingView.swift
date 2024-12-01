@@ -9,8 +9,11 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import SwiftData
 
 struct OnboardingView: View {
+    @Environment(\.modelContext) private var context
+    @EnvironmentObject var router: Router
     @Binding var isOnboardingCompleted: Bool
     @State private var selectedTab = 0
     @State private var selectedImage: UIImage? = nil
@@ -29,7 +32,6 @@ struct OnboardingView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding()
-
                 Text("Tu asistente para monitorear y ahorrar energía.")
                     .font(.headline)
                     .multilineTextAlignment(.center)
@@ -91,6 +93,8 @@ struct OnboardingView: View {
                         // Aquí puedes simular la funcionalidad o mostrar un mensaje
                         // Por ejemplo, marcar el onboarding como completado
                         isOnboardingCompleted = true
+                        router.navigate(to: .homeView)
+                    
                     }
                 }
 
@@ -172,12 +176,9 @@ struct OnboardingView: View {
 
         }
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
+        .navigationBarBackButtonHidden()
     }
-    
-    
 }
-
-
 
 
 /*

@@ -10,15 +10,18 @@ import Combine
 import Vision
 import UIKit
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var electrodomesticoViewModel: ElectrodomesticoViewModel
+    @Environment(\.modelContext) private var context
     @State private var selectedImage: UIImage? = nil
     @State private var showImagePicker = false
     @State private var showMissionAlert = false
     @State private var missionCompleted = false
     @State private var Sho = false
+    @Query var usuario: [UsuarioResponse]
 
 
     var body: some View {
@@ -191,7 +194,7 @@ struct HomeView: View {
         }
         .onAppear {
             Task {
-                await electrodomesticoViewModel.fetchElectrodomesticos()
+                await electrodomesticoViewModel.fetchElectrodomesticos(usuarioId: usuario.first?.usuario.usuarioId ?? 0, token: usuario.first?.token ?? "")
             }
         }
         .alert(isPresented: $showMissionAlert) {

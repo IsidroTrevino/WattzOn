@@ -11,7 +11,7 @@ import Foundation
 import SwiftUI
 import SwiftData
 
-let secureConnection = "http"
+let secureConnection = "https"
 
 class ReciboViewModel: ObservableObject {
     @Published var recibos: [Recibo] = []
@@ -51,13 +51,7 @@ class ReciboViewModel: ObservableObject {
     }
     
     // Función para obtener los recibos desde la API
-    func fetchRecibos() async {
-        guard let currentUser = getCurrentUsuario() else {
-            print("Usuario no encontrado")
-            return
-        }
-        let usuarioId = currentUser.usuarioId
-        let token = currentUser.token
+    func fetchRecibos(usuarioId: Int, token: String) async {
 
         do {
             let recibos = try await fetchRecibosFromAPI(usuarioId: usuarioId, token: token)
@@ -136,13 +130,7 @@ class ReciboViewModel: ObservableObject {
     }
 
     // Función para crear un recibo a través de la API
-    func createRecibo(_ recibo: Recibo) async throws -> Recibo {
-        guard let usuario = getCurrentUsuario() else {
-            print("Usuario no encontrado")
-            throw NSError(domain: "Usuario no encontrado", code: 0)
-        }
-        let token = usuario.token
-
+    func createRecibo(_ recibo: Recibo, token: String) async throws -> Recibo {
         guard let url = URL(string: "\(secureConnection)://\(ipAddress)/api/wattzon/recibo/add") else {
             print("URL inválida")
             throw URLError(.badURL)
@@ -210,12 +198,7 @@ class ReciboViewModel: ObservableObject {
     }
 
     // MARK: - Función para actualizar un recibo a través de la API
-    func updateRecibo(_ recibo: Recibo) async throws {
-        guard let usuario = getCurrentUsuario() else {
-            print("Usuario no encontrado")
-            throw NSError(domain: "Usuario no encontrado", code: 0, userInfo: nil)
-        }
-        let token = usuario.token
+    func updateRecibo(_ recibo: Recibo, token: String) async throws {
 
         guard let idRecibo = recibo.idRecibo else {
             print("ID del recibo no disponible")
@@ -267,13 +250,7 @@ class ReciboViewModel: ObservableObject {
     }
 
     // MARK: - Función para eliminar un recibo a través de la API
-    func deleteRecibo(_ idRecibo: Int) async throws {
-        guard let usuario = getCurrentUsuario() else {
-            print("Usuario no encontrado")
-            throw NSError(domain: "Usuario no encontrado", code: 0, userInfo: nil)
-        }
-        let token = usuario.token
-
+    func deleteRecibo(_ idRecibo: Int, token: String) async throws {
         guard let url = URL(string: "\(secureConnection)://\(ipAddress)/api/wattzon/recibo/\(idRecibo)") else {
             print("URL inválida")
             throw URLError(.badURL)

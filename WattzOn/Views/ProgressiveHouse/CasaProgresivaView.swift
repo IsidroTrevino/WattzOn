@@ -8,18 +8,21 @@
 // CasaProgresivaView.swift
 
 import SwiftUI
+import SwiftData
 
 struct CasaProgresivaView: View {
     @StateObject private var electrodomesticoViewModel = ElectrodomesticoViewModel()
     @StateObject private var reciboViewModel = ReciboViewModel()
     @EnvironmentObject var usageViewModel: ElectrodomesticoUsageViewModel
     @EnvironmentObject var tabSelection: TabSelection
+    @Environment(\.modelContext) private var context
     
     @State private var consumoTotalPeriodo: Double = 0.0
     @State private var costoTotalPeriodo: Double = 0.0
     @State private var porcentajeConsumoRegistrado: Double = 0.0
     @State private var showElectrodomesticosList = false
     @State private var porcentajeCompletado: Double = 0.0
+    @Query var usuario: [UsuarioResponse]
     
     var body: some View {
         VStack {
@@ -81,16 +84,16 @@ struct CasaProgresivaView: View {
         }
         .onAppear {
             Task {
-                await electrodomesticoViewModel.fetchElectrodomesticos()
-                await reciboViewModel.fetchRecibos()
+                await electrodomesticoViewModel.fetchElectrodomesticos(usuarioId: usuario.first?.usuario.usuarioId ?? 0, token: usuario.first?.token ?? "")
+                await reciboViewModel.fetchRecibos(usuarioId: usuario.first!.usuario.usuarioId, token: usuario.first!.token)
                 calcularConsumo()
             }
         }
         .onReceive(tabSelection.$selectedTab) { newValue in
             if newValue == "MiHogar" {
                 Task {
-                    await electrodomesticoViewModel.fetchElectrodomesticos()
-                    await reciboViewModel.fetchRecibos()
+                    await electrodomesticoViewModel.fetchElectrodomesticos(usuarioId: usuario.first!.usuario.usuarioId, token: usuario.first!.token)
+                    await reciboViewModel.fetchRecibos(usuarioId: usuario.first!.usuario.usuarioId, token: usuario.first!.token)
                     calcularConsumo()
                 }
             }

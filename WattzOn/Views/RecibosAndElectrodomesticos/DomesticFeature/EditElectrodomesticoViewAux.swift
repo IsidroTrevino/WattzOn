@@ -21,9 +21,11 @@ extension EditElectrodomesticoView {
             showAlert = true
             return
         }
+        
+        let token = getToken()
 
         // Actualizar el electrodoméstico local
-        var updatedElectrodomestico = electrodomestico
+        let updatedElectrodomestico = electrodomestico
         updatedElectrodomestico.nombre = nombre
         updatedElectrodomestico.marca = marca
         updatedElectrodomestico.tipo = tipo
@@ -34,7 +36,7 @@ extension EditElectrodomesticoView {
 
         Task {
             do {
-                try await viewModel.updateElectrodomestico(updatedElectrodomestico)
+                try await viewModel.updateElectrodomestico(updatedElectrodomestico, token: token)
                 DispatchQueue.main.async {
                     router.goBack()
                 }

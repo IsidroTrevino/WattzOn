@@ -9,6 +9,7 @@
 
 import SwiftUI
 import PhotosUI
+import SwiftData
 
 struct AddElectrodomesticoView: View {
     @EnvironmentObject var router: Router
@@ -30,6 +31,11 @@ struct AddElectrodomesticoView: View {
     @State var showUsageView = false // Nuevo estado
     @State var showAlert = false
     @State var alertMessage = ""
+    @Query var usuario: [UsuarioResponse]
+    
+    func getCurrentUsuario() -> UsuarioResponse? {
+        return usuario.first
+    }
     
     init(electrodomestico: Electrodomestico? = nil) {
         if let data = electrodomestico {

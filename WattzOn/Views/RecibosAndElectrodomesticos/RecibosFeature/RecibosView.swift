@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RecibosView: View {
     @EnvironmentObject var router: Router
@@ -20,6 +21,7 @@ struct RecibosView: View {
     @State private var showErrorAlert = false
     @State private var errorMessage = ""
     @State private var extractedData: ExtractedReceiptData?
+    @Query var usuario: [UsuarioResponse]
     
     var body: some View {
         VStack {
@@ -155,7 +157,7 @@ struct RecibosView: View {
                 viewModel.modelContext = modelContext
             }
             Task {
-                await viewModel.fetchRecibos()
+                await viewModel.fetchRecibos(usuarioId: usuario.first!.usuario.usuarioId, token: usuario.first!.token)
             }
         }
     }
@@ -163,10 +165,11 @@ struct RecibosView: View {
     private func deleteRecibo(at offsets: IndexSet) {
         for index in offsets {
             let recibo = viewModel.recibos[index]
+            let token = usuario.first!.token
             Task {
                 do {
                     if let idRecibo = recibo.idRecibo {
-                        try await viewModel.deleteRecibo(idRecibo)
+                        try await viewModel.deleteRecibo(idRecibo, token: token)
                         DispatchQueue.main.async {
                             viewModel.recibos.remove(at: index)
                         }

@@ -9,12 +9,13 @@ import Foundation
 import PhotosUI
 
 extension AddElectrodomesticoView {
+    
     func selectNewImage() {
         showImagePicker = true
     }
 
     func saveElectrodomestico() {
-        // Validar la entrada
+        // Validate input
         guard let potencia = Double(potenciaWatts), !nombre.isEmpty else {
             alertMessage = "Asegúrate de ingresar un nombre y un valor válido para la potencia."
             showAlert = true
@@ -22,13 +23,16 @@ extension AddElectrodomesticoView {
         }
 
         // Obtener el usuario actual
-        guard let usuario = getCurrentUsuario() else {
-            print("Usuario no encontrado")
+        let usuario = getCurrentUsuario()
+        let usuarioId = usuario?.usuario.usuarioId
+
+        // Asegúrate de que usuarioId no sea nil antes de usarlo
+        guard let usuarioId = usuarioId else {
+            print("Error: usuarioId es nil")
             return
         }
-        let usuarioId = usuario.usuarioId
 
-        // Crear el nuevo electrodoméstico
+        // Create the new electrodoméstico
         let nuevoElectrodomestico = Electrodomestico(
             electrodomesticoId: 0,
             usuarioId: usuarioId,
@@ -43,14 +47,12 @@ extension AddElectrodomesticoView {
 
         Task {
             do {
-                let createdElectrodomestico = try await viewModel.createElectrodomestico(nuevoElectrodomestico)
+                let createdElectrodomestico = try await viewModel.createElectrodomestico(nuevoElectrodomestico, token: usuario?.token ?? "")
                 DispatchQueue.main.async {
-                    // Guardar el ID del nuevo electrodoméstico
+                    // Save the new electrodoméstico ID
                     self.nuevoElectrodomesticoId = createdElectrodomestico.electrodomesticoId
-                    // Mostrar la vista para ingresar las horas de uso
+                    // Show the view to enter usage hours
                     self.showUsageView = true
-
-                    //router.goBack()
                 }
             } catch {
                 print("Error al agregar electrodoméstico:", error)

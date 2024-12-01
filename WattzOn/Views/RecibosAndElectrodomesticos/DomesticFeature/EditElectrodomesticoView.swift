@@ -9,6 +9,7 @@
 
 import SwiftUI
 import PhotosUI
+import SwiftData
 
 struct EditElectrodomesticoView: View {
     @EnvironmentObject var router: Router
@@ -29,6 +30,7 @@ struct EditElectrodomesticoView: View {
     @State var showImagePicker = false
     @State var showAlert = false
     @State var alertMessage = ""
+    @Query var usuario: [UsuarioResponse]
     
     init(electrodomestico: Electrodomestico) {
         self.electrodomestico = electrodomestico
@@ -45,6 +47,10 @@ struct EditElectrodomesticoView: View {
         } else {
             _selectedImage = State(initialValue: nil)
         }
+    }
+    
+    func getToken() -> String {
+        return usuario.first!.token
     }
     
     var body: some View {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct EditReciboView: View {
     @EnvironmentObject var router: Router
@@ -22,6 +23,9 @@ struct EditReciboView: View {
     @State private var subtotal: String
 
     @State private var isAddingConcepto = false
+    
+    @Query var usuario: [UsuarioResponse]
+
 
     init(recibo: Recibo) {
         self.recibo = recibo
@@ -201,6 +205,8 @@ struct EditReciboView: View {
             viewModel.showErrorAlert = true
             return
         }
+        
+        let token = usuario.first!.token
 
         // Actualizar el recibo
         var updatedRecibo = recibo
@@ -213,7 +219,7 @@ struct EditReciboView: View {
 
         Task {
             do {
-                try await viewModel.updateRecibo(updatedRecibo)
+                try await viewModel.updateRecibo(updatedRecibo, token: token)
                 
                 DispatchQueue.main.async {
                     router.goBack()

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 class ConceptosData: ObservableObject {
     @Published var conceptos: [Concepto] = []
@@ -28,6 +29,8 @@ struct AddReciboView: View {
     @State private var subtotal: String
 
     @State private var isAddingConcepto = false
+    
+    @Query var usuario: [UsuarioResponse]
 
     init(initialData: ExtractedReceiptData? = nil) {
         if let data = initialData {
@@ -215,12 +218,8 @@ struct AddReciboView: View {
             return
         }
 
-        // Obtener el usuario actual
-        guard let usuario = getCurrentUsuario() else {
-            print("Usuario no encontrado")
-            return
-        }
-        let usuarioId = usuario.usuarioId
+        let usuarioId = usuario.first!.usuario.usuarioId
+        let token = usuario.first!.token
 
         let nuevoRecibo = Recibo(
             idRecibo: 0,
@@ -246,7 +245,7 @@ struct AddReciboView: View {
         
         Task {
             do {
-                _ = try await viewModel.createRecibo(nuevoRecibo)
+                _ = try await viewModel.createRecibo(nuevoRecibo, token: token)
                 router.goBack()
 
                 DispatchQueue.main.async {

@@ -28,9 +28,10 @@ extension DomesticoView {
 
             // Eliminar del servidor
             Task {
+                let token = getToken()
                 do {
                     if let electrodomesticoId = electrodomestico.electrodomesticoId {
-                        try await viewModel.deleteElectrodomestico(electrodomesticoId)
+                        try await viewModel.deleteElectrodomestico(electrodomesticoId, token: token)
                         DispatchQueue.main.async {
                             viewModel.electrodomesticos.remove(at: index)
                         }
@@ -85,7 +86,7 @@ extension DomesticoView {
 
     // MARK: - Procesamiento de imagen y ML
 
-    func processImage(_ image: UIImage) {
+    func processImage(_ image: UIImage, usuarioId: Int) {
         print("jajajaj")
         isProcessingImage = true
         print("777")
@@ -179,13 +180,6 @@ extension DomesticoView {
                 }
                 return
             }
-
-            // Obtener el usuario actual
-            guard let usuario = getCurrentUsuario() else {
-                print("Usuario no encontrado")
-                return
-            }
-            let usuarioId = usuario.usuarioId
 
             // Crear el objeto Electrodomestico
             let nuevoElectrodomestico = Electrodomestico(

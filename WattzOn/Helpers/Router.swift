@@ -27,6 +27,7 @@ class Router: ObservableObject {
         case addReciboView(initialData: ExtractedReceiptData?)
         case editReciboView(recibo: Recibo)
         case reciboReadingsInfo(field: ReciboField)
+        case onBoardingView
 
     }
 

@@ -26,7 +26,12 @@ struct DomesticoView: View {
     @State var imagePickerSourceType: UIImagePickerController.SourceType = .camera
     @State var showImagePicker = false
     @State var extractedElectrodomestico: Electrodomestico?
-    @State var showNoMatchAlert = false // Nuevo estado para la alerta
+    @State var showNoMatchAlert = false
+    @Query var usuario: [UsuarioResponse]
+    
+    func getToken() -> String {
+        return usuario.first!.token
+    }
     
     var body: some View {
         VStack {
@@ -55,7 +60,7 @@ struct DomesticoView: View {
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding(.top, 10)
-            
+                        
             if viewModel.electrodomesticos.isEmpty {
                 VStack {
                     Image(systemName: "house.fill")
@@ -124,7 +129,7 @@ struct DomesticoView: View {
                 .onDisappear {
                     if let image = selectedImage {
                         print("Hasta acá todo bien")
-                        processImage(image)
+                        processImage(image, usuarioId: usuario.first!.usuario.usuarioId)
                     }
                 }
         }
@@ -171,7 +176,8 @@ struct DomesticoView: View {
         }
         .onAppear {
             Task {
-                await viewModel.fetchElectrodomesticos()
+                print(usuario.first?.usuario.usuarioId ?? 999999)
+                await viewModel.fetchElectrodomesticos(usuarioId: usuario.first?.usuario.usuarioId ?? 0, token: usuario.first?.token ?? "")
             }
         }
     }

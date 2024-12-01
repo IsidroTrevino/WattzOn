@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct PerfilView: View {
-    @StateObject private var viewModel = PerfilViewModel()
     
     var body: some View {
         VStack(spacing: 30) {
@@ -48,7 +47,7 @@ struct PerfilView: View {
                     Text("Nombre")
                         .font(.headline)
                         .foregroundColor(.gray)
-                    Text(viewModel.userr.nombre)
+                    Text("Holaaa")
                         .font(.body)
                         .foregroundColor(.black)
                 }
@@ -66,7 +65,7 @@ struct PerfilView: View {
                     Text("Correo Electrónico")
                         .font(.headline)
                         .foregroundColor(.gray)
-                    Text(viewModel.userr.email)
+                    Text("Holaaa")
                         .font(.body)
                         .foregroundColor(.black)
                 }
@@ -75,7 +74,6 @@ struct PerfilView: View {
             .padding(.horizontal, 60)
             
             Button(action: {
-                viewModel.cambiarContrasena()
             }) {
                 Label("Cambia tu contraseña", systemImage: "lock")
                     .padding()
