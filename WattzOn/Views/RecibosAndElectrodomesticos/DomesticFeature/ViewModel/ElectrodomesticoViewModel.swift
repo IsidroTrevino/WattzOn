@@ -41,6 +41,9 @@ class ElectrodomesticoViewModel: ObservableObject {
 
             let decoder = JSONDecoder()
             let electrodomesticos = try decoder.decode([Electrodomestico].self, from: data)
+            DispatchQueue.main.async {
+                self.electrodomesticos = electrodomesticos
+            }
             return electrodomesticos
 
         } catch {
@@ -90,6 +93,10 @@ class ElectrodomesticoViewModel: ObservableObject {
             // Decodificar la respuesta para obtener el electrodoméstico creado
             let decoder = JSONDecoder()
             let createdElectrodomestico = try decoder.decode(Electrodomestico.self, from: data)
+            
+            DispatchQueue.main.async {
+                self.electrodomesticos.append(createdElectrodomestico)
+            }
             return createdElectrodomestico
         } catch {
             print("Error al realizar la solicitud:", error)
@@ -136,6 +143,11 @@ class ElectrodomesticoViewModel: ObservableObject {
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                 print("Error: Respuesta del servidor no fue 200 OK")
                 throw URLError(.badServerResponse)
+            }
+            DispatchQueue.main.async {
+                if let index = self.electrodomesticos.firstIndex(where: { $0.electrodomesticoId == electrodomestico.electrodomesticoId }) {
+                    self.electrodomesticos[index] = electrodomestico
+                }
             }
         } catch {
             print("Error al realizar la solicitud:", error)
