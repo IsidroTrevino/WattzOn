@@ -14,10 +14,18 @@
 			remoteGlobalIDString = E6F85A2E2CB99EDE00461EE6;
 			remoteInfo = WattzOn;
 		};
+		E683DDA12CFD61AD00343768 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E6F85A272CB99EDE00461EE6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6F85A2E2CB99EDE00461EE6;
+			remoteInfo = WattzOn;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		2FBBE8D32CFAE4C500835C63 /* TestingFer.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestingFer.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E683DD9D2CFD61AD00343768 /* IsidroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IsidroTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6F85A2F2CB99EDE00461EE6 /* WattzOn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WattzOn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -25,6 +33,11 @@
 		2FBBE8D42CFAE4C500835C63 /* TestingFer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = TestingFer;
+			sourceTree = "<group>";
+		};
+		E683DD9E2CFD61AD00343768 /* IsidroTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IsidroTests;
 			sourceTree = "<group>";
 		};
 		E6F85A312CB99EDE00461EE6 /* WattzOn */ = {
@@ -36,6 +49,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		2FBBE8D02CFAE4C500835C63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E683DD9A2CFD61AD00343768 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -57,6 +77,7 @@
 			children = (
 				E6F85A312CB99EDE00461EE6 /* WattzOn */,
 				2FBBE8D42CFAE4C500835C63 /* TestingFer */,
+				E683DD9E2CFD61AD00343768 /* IsidroTests */,
 				E6F85A302CB99EDE00461EE6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -66,6 +87,7 @@
 			children = (
 				E6F85A2F2CB99EDE00461EE6 /* WattzOn.app */,
 				2FBBE8D32CFAE4C500835C63 /* TestingFer.xctest */,
+				E683DD9D2CFD61AD00343768 /* IsidroTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -94,6 +116,29 @@
 			);
 			productName = TestingFer;
 			productReference = 2FBBE8D32CFAE4C500835C63 /* TestingFer.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E683DD9C2CFD61AD00343768 /* IsidroTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E683DDA52CFD61AD00343768 /* Build configuration list for PBXNativeTarget "IsidroTests" */;
+			buildPhases = (
+				E683DD992CFD61AD00343768 /* Sources */,
+				E683DD9A2CFD61AD00343768 /* Frameworks */,
+				E683DD9B2CFD61AD00343768 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E683DDA22CFD61AD00343768 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E683DD9E2CFD61AD00343768 /* IsidroTests */,
+			);
+			name = IsidroTests;
+			packageProductDependencies = (
+			);
+			productName = IsidroTests;
+			productReference = E683DD9D2CFD61AD00343768 /* IsidroTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		E6F85A2E2CB99EDE00461EE6 /* WattzOn */ = {
@@ -125,11 +170,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					2FBBE8D22CFAE4C500835C63 = {
 						CreatedOnToolsVersion = 16.0;
+						TestTargetID = E6F85A2E2CB99EDE00461EE6;
+					};
+					E683DD9C2CFD61AD00343768 = {
+						CreatedOnToolsVersion = 16.1;
 						TestTargetID = E6F85A2E2CB99EDE00461EE6;
 					};
 					E6F85A2E2CB99EDE00461EE6 = {
@@ -153,12 +202,20 @@
 			targets = (
 				E6F85A2E2CB99EDE00461EE6 /* WattzOn */,
 				2FBBE8D22CFAE4C500835C63 /* TestingFer */,
+				E683DD9C2CFD61AD00343768 /* IsidroTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2FBBE8D12CFAE4C500835C63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E683DD9B2CFD61AD00343768 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -182,6 +239,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E683DD992CFD61AD00343768 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E6F85A2B2CB99EDE00461EE6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -196,6 +260,11 @@
 			isa = PBXTargetDependency;
 			target = E6F85A2E2CB99EDE00461EE6 /* WattzOn */;
 			targetProxy = 2FBBE8D72CFAE4C500835C63 /* PBXContainerItemProxy */;
+		};
+		E683DDA22CFD61AD00343768 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6F85A2E2CB99EDE00461EE6 /* WattzOn */;
+			targetProxy = E683DDA12CFD61AD00343768 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -228,6 +297,44 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = wattzon.TestingFer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WattzOn.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WattzOn";
+			};
+			name = Release;
+		};
+		E683DDA32CFD61AD00343768 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2AWB66Q34B;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = tec.mx.isidro.IsidroTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WattzOn.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WattzOn";
+			};
+			name = Debug;
+		};
+		E683DDA42CFD61AD00343768 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2AWB66Q34B;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = tec.mx.isidro.IsidroTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -423,6 +530,15 @@
 			buildConfigurations = (
 				2FBBE8D92CFAE4C500835C63 /* Debug */,
 				2FBBE8DA2CFAE4C500835C63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E683DDA52CFD61AD00343768 /* Build configuration list for PBXNativeTarget "IsidroTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E683DDA32CFD61AD00343768 /* Debug */,
+				E683DDA42CFD61AD00343768 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
