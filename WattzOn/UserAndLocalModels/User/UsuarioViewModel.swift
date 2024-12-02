@@ -93,19 +93,19 @@ class UsuarioRegister: ObservableObject {
 
 @MainActor
 class UsuarioUpdate: ObservableObject {
-    @Published var usuarioResponse: UsuarioResponse?
+    @Published var usuarioResponse: Usuario?
 
-    func updateUser(usuarioId: Int, token: String, nombre: String, apellido: String, email: String, ciudad: String?, estado: String?) async throws -> UsuarioResponse {
+    func updateUser(usuarioId: Int, token: String, nombre: String, apellido: String, email: String, ciudad: String?, estado: String?) async throws -> Usuario {
         guard let url = URL(string: "https://\(ipAddress)/api/wattzon/usuario/\(usuarioId)") else {
             print("URL inválida")
             throw URLError(.badURL)
         }
-        
+
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "PUT"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
+
         let requestBody: [String: Any] = [
             "nombre": nombre,
             "apellido": apellido,
@@ -113,20 +113,25 @@ class UsuarioUpdate: ObservableObject {
             "ciudad": ciudad ?? "",
             "estado": estado ?? ""
         ]
-        
+
         do {
             urlRequest.httpBody = try JSONSerialization.data(withJSONObject: requestBody, options: [])
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
-            
+
             if let httpResponse = response as? HTTPURLResponse {
                 print("Código de estado HTTP:", httpResponse.statusCode)
                 guard httpResponse.statusCode == 200 else {
                     throw URLError(.badServerResponse)
                 }
             }
-            
-            let updateResponse = try JSONDecoder().decode(UsuarioResponse.self, from: data)
-            print("Usuario Actualizado: \(updateResponse.usuario.usuarioId), Token: \(updateResponse.token)")
+
+            // Imprimir la respuesta del servidor para depuración
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("Respuesta del servidor: \(responseString)")
+            }
+
+            let updateResponse = try JSONDecoder().decode(Usuario.self, from: data)
+            print("Usuario Actualizado: \(updateResponse.usuarioId)")
 
             self.usuarioResponse = updateResponse
             return updateResponse

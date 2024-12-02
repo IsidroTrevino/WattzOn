@@ -51,10 +51,13 @@ struct ContentView: View {
                 }
                 .tag("Tips")
             PerfilView()
+                .environmentObject(usageViewModel)
+                .environmentObject(electrodomesticoViewModel)
                 .tabItem {
                     Label("Perfil", systemImage: "person")
                 }
                 .tag("Perfil")
+            
         }
         .navigationBarBackButtonHidden()
         .modelContainer(for: [UsuarioResponse.self])
