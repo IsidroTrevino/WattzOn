@@ -26,7 +26,7 @@ struct PerfilView: View {
     @State var estado: String = ""
     @State var showError = false
     @State var errorMessage = ""
-    
+        
     var body: some View {
         NavigationView {
             VStack(spacing: 30) {

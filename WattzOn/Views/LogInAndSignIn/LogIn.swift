@@ -18,17 +18,9 @@ struct LogIn: View {
     @State private var showPassword = false
     @State private var showErrorMessage = false
     @State private var errorMessage = ""
-    @Binding var isLoggedIn: Bool {
-        didSet {
-            UserDefaults.standard.set(isLoggedIn, forKey: "isLoggedIn")
-        }
-    }
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
+    
     let onboardingCompleted = UserDefaults.standard.bool(forKey: "isOnboardingCompleted")
-
-
-    init(isLoggedIn: Binding<Bool>) {
-        _isLoggedIn = isLoggedIn
-    }
 
     var body: some View {
         VStack {

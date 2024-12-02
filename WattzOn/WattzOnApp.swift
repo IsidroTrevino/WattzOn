@@ -11,7 +11,7 @@ import SwiftData
 @main
 struct WattzonApp: App {
     @StateObject private var router = Router()
-    @State private var isLoggedIn = false
+    @AppStorage("isLoggedIn") private var isLoggedIn = false
     @AppStorage("isOnboardingCompleted") private var isOnboardingCompleted = false
 
     var body: some Scene {
@@ -25,15 +25,15 @@ struct WattzonApp: App {
                             OnboardingView(isOnboardingCompleted: $isOnboardingCompleted)
                         }
                     } else {
-                        LogIn(isLoggedIn: $isLoggedIn)
+                        LogIn()
                     }
                 }
                 .navigationDestination(for: Router.Destination.self) { destination in
                     switch destination {
                     case .logIn:
-                        LogIn(isLoggedIn: $isLoggedIn)
+                        LogIn()
                     case .signIn:
-                        SignIn(isLoggedIn: $isLoggedIn)
+                        SignIn()
                     case .domesticoView:
                         DomesticoView()
                     case .recibosListView:

@@ -71,11 +71,11 @@ extension PerfilView {
         }
 
         electrodomesticoViewModel.electrodomesticos = []
+        
 
         usageViewModel.usages = []
         usageViewModel.saveUsages()
-        
-        router.navPath = []
+                
         router.navigate(to: .logIn)
     }
 }
