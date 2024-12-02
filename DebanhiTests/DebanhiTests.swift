@@ -6,11 +6,21 @@
 //
 
 import Testing
+@testable import WattzOn
 
 struct DebanhiTests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test func testGetTips() async throws {
+        let tipsViewModel = TipsViewModel()
+        
+        #expect(!tipsViewModel.arrTip.isEmpty, "arrTip no debería estar vacío después de la inicialización")
+        
+        if let firstTip = tipsViewModel.arrTip.first {
+            #expect(firstTip.tipName == "¿Cómo reducir el consumo eléctrico?")
+            #expect(firstTip.description == "Reducir el consumo eléctrico es una excelente forma de ahorrar dinero y cuidar el medio ambiente.")
+        } else {
+            print("No se pudo")
+        }
     }
 
 }
