@@ -23,7 +23,7 @@ struct SignIn: View {
     @State private var showPassword = false
     @State private var showErrorMessage = false
     @State private var errorMessage = ""
-    @Binding var isLoggedIn: Bool
+    @AppStorage("isLoggedIn") private var isLoggedIn = false
 
     var body: some View {
         ScrollView {
